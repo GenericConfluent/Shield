@@ -16,6 +16,7 @@
 #include "Player.hpp"
 #include "Enemy.hpp"
 #include "ResourcePath.hpp"
+#include "ProgressBar.hpp"
 
 namespace mp {
     class Player;
@@ -59,11 +60,17 @@ namespace mp {
         
         sf::Clock _score;
         sf::Text _scoreDisplay;
+        ProgressBar * _energyBar;
+        int _energy = 100;
+        sf::Clock _subTime;
+        
+        sf::Clock _pressTime;
         
         std::vector<Enemy> _enemies;
         
         // Game state
         float _slowMotion = 1.0;
+        
         
     };
 }

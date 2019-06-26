@@ -56,7 +56,7 @@ namespace mp {
     }
     
     void Enemy::update(){
-        _enemyBody.move((-(cos(_enemyBody.getRotation()*3.14159265/180)*-3))*2, (sin(_enemyBody.getRotation()*3.14159265/180)*3)*2);
+        _enemyBody.move((-(cos(_enemyBody.getRotation()*3.14159265/180)*-3))*1.5, (sin(_enemyBody.getRotation()*3.14159265/180)*3)*1.5);
     }
     
     bool Enemy::isDead(){

@@ -54,6 +54,7 @@ namespace mp{
         _scoreDisplay.setOrigin(_scoreDisplay.getLocalBounds().width/2, _scoreDisplay.getLocalBounds().height/2);
         _scoreDisplay.setPosition(_data->window.getSize().x/2, _data->window.getSize().y/2);
         
+        _energyBar = new ProgressBar(_data);
         
     }
     
@@ -73,7 +74,14 @@ namespace mp{
         }
         
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-            _player->playerSprite.move((-(cos(_player->playerSprite.getRotation()*3.14159265/180)*-3))*_player->getSpeed(), (sin(_player->playerSprite.getRotation()*3.14159265/180)*3)*_player->getSpeed());
+            if(_energy != 0){
+                _player->playerSprite.move((-(cos(_player->playerSprite.getRotation()*3.14159265/180)*-3))*_player->getSpeed(), (sin(_player->playerSprite.getRotation()*3.14159265/180)*3)*_player->getSpeed());
+                if(_subTime.getElapsedTime().asMilliseconds() >= 200){
+                    _energy -= 5;
+                    _subTime.restart();
+                }
+            }
+            _pressTime.restart();
         }
     }
     
@@ -120,7 +128,11 @@ namespace mp{
             _spawnClock.restart();
         }
         
+        if (_pressTime.getElapsedTime().asSeconds() >= 2.5 && _energy < 100) {
+            _energy += 5;
+        }
         
+        _energyBar->setValue(_energy);
         
         std::stringstream stream;
         stream << std::setfill('0') << std::setw(4) << round(_score.getElapsedTime().asSeconds());
@@ -141,6 +153,8 @@ namespace mp{
             }
         }
         
+        
+        
     }
     
     void GameState::Draw(float dt)
@@ -156,6 +170,8 @@ namespace mp{
         for (int i  = 0; i < _enemies.size(); i++) {
             _enemies[i].draw();
         }
+        
+        _energyBar->draw();
         
         this->_data->window.draw(this->_data->cursor);
         this->_data->window.display();
