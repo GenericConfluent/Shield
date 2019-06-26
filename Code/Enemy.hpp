@@ -22,7 +22,7 @@ namespace mp {
         ~Enemy();
         
         void draw();
-        void update();
+        void update(float _slowMotion, float _time);
         bool isDead();
         
         sf::Sprite _enemyBody;

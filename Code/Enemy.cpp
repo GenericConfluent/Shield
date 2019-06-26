@@ -55,8 +55,9 @@ namespace mp {
         _data->window.draw(_enemyBody);
     }
     
-    void Enemy::update(){
-        _enemyBody.move((-(cos(_enemyBody.getRotation()*3.14159265/180)*-3))*1.5, (sin(_enemyBody.getRotation()*3.14159265/180)*3)*1.5);
+    void Enemy::update(float _slowMotion, float _time){
+        float speed = float((_time/20)+1)/_slowMotion;
+        _enemyBody.move(speed*(-(cos(_enemyBody.getRotation()*3.14159265/180)*-1)), speed*(sin(_enemyBody.getRotation()*3.14159265/180)*1));
     }
     
     bool Enemy::isDead(){

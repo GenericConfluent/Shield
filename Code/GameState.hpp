@@ -48,6 +48,10 @@ namespace mp {
         void Draw(float dt);
         
     private:
+        
+        sf::Vector2f getRandomPositionOnWindow(sf::Vector2f position);
+        
+        
         GameDataRef _data;
         
         sf::Music _bgmusic;
@@ -59,6 +63,9 @@ namespace mp {
         
         float _waitTime = 1.0;
         sf::Clock _spawnClock;
+        
+        sf::Clock _buffSpawnClock;
+        sf::Clock _buffDuration;
         
         sf::Clock _score;
         sf::Text _scoreDisplay;
@@ -76,6 +83,7 @@ namespace mp {
         
         // Game state
         float _slowMotion = 1.0;
+        std::vector<sf::Sprite> _timeStops;
         
         
     };
