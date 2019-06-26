@@ -15,6 +15,7 @@
 #include "Collision.hpp"
 
 
+
 namespace mp{
     
 //    std::vector<sf::Sprite> playerGhosts;
@@ -56,6 +57,17 @@ namespace mp{
         
         _energyBar = new ProgressBar(_data);
         
+        _boom = new Explosion(_data);
+        _boom->reset();
+        _playBoom = false;
+        
+        
+        sf::SoundBuffer buffer;
+        buffer.loadFromFile((resourcePath() + "Assets/Audio/Sounds/boom.wav"));
+        
+        _explosionSound.setBuffer(buffer);
+        _explosionSound.setVolume(100);
+        
     }
     
     void GameState::HandleInput()
@@ -83,6 +95,8 @@ namespace mp{
             }
             _pressTime.restart();
         }
+        
+        
     }
     
     void GameState::Update(float dt)
@@ -92,69 +106,78 @@ namespace mp{
         
         this->_data->cursor.setPosition(world_mousePos);
         
-        sf::Vector2f playerPos = _player->playerSprite.getPosition();
-        
-        const float PI = 3.14159265;
-        
-        float dx = playerPos.x - world_mousePos.x;
-        float dy = playerPos.y - world_mousePos.y;
-        
-        float rotation = (atan2(dy, dx) * 180 / PI) + 180;
-        
-        _player->playerSprite.setRotation(rotation);
-        
-        _player->update();
-        
-        
-        
-        _playerGhost->update();
-        
-        //        if(_spawnClock.getElapsedTime().asMilliseconds() > 400){
-        //            _playerGhost->spawn(_player->playerSprite.getPosition());
-        //        }
-        
-        
-        if(_spawnClock.getElapsedTime().asSeconds() > _waitTime){
-            if (_waitTime > 1.0) {
-                _waitTime = 3 - float(_score.getElapsedTime().asSeconds()) / float(30 * ceil((double)(_slowMotion/5.0)));
+        if(!_playBoom){
+            sf::Vector2f playerPos = _player->playerSprite.getPosition();
+            
+            const float PI = 3.14159265;
+            
+            float dx = playerPos.x - world_mousePos.x;
+            float dy = playerPos.y - world_mousePos.y;
+            
+            float rotation = (atan2(dy, dx) * 180 / PI) + 180;
+            
+            _player->playerSprite.setRotation(rotation);
+            
+            _player->update();
+            
+            
+            
+            _playerGhost->update();
+            
+            //        if(_spawnClock.getElapsedTime().asMilliseconds() > 400){
+            //            _playerGhost->spawn(_player->playerSprite.getPosition());
+            //        }
+            
+            
+            if(_spawnClock.getElapsedTime().asSeconds() > _waitTime){
+                if (_waitTime > 1.0) {
+                    _waitTime = 3 - float(_score.getElapsedTime().asSeconds()) / float(30 * ceil((double)(_slowMotion/5.0)));
+                }
+                
+                if (_waitTime > 0.5 && _waitTime <= 1) {
+                    _waitTime = 5 - float(_score.getElapsedTime().asSeconds()) / float(100 * ceil((double)(_slowMotion/5.0)));
+                }
+                
+                Enemy enemy(_data ,_player->playerSprite.getPosition());
+                _enemies.push_back(enemy);
+                _spawnClock.restart();
             }
             
-            if (_waitTime > 0.5 && _waitTime <= 1) {
-                _waitTime = 5 - float(_score.getElapsedTime().asSeconds()) / float(100 * ceil((double)(_slowMotion/5.0)));
+            if (_pressTime.getElapsedTime().asSeconds() >= 2.5 && _energy < 100) {
+                _energy += 5;
             }
             
-            Enemy enemy(_data ,_player->playerSprite.getPosition());
-            _enemies.push_back(enemy);
-            _spawnClock.restart();
-        }
-        
-        if (_pressTime.getElapsedTime().asSeconds() >= 2.5 && _energy < 100) {
-            _energy += 5;
-        }
-        
-        _energyBar->setValue(_energy);
-        
-        std::stringstream stream;
-        stream << std::setfill('0') << std::setw(4) << round(_score.getElapsedTime().asSeconds());
-        
-        _scoreDisplay.setString(stream.str());
-        _scoreDisplay.setOrigin(_scoreDisplay.getLocalBounds().width/2, _scoreDisplay.getLocalBounds().height/2+150);
-        _scoreDisplay.setPosition(_data->window.getSize().x/2, _data->window.getSize().y/2);
-        
-        for (int i  = 0; i < _enemies.size(); i++) {
-            if((_enemies[i]._enemyBody.getPosition().x > _data->window.getSize().x*1.5 || _enemies[i]._enemyBody.getPosition().x < -400) && (_enemies[i]._enemyBody.getPosition().y > _data->window.getSize().y*1.5 || _enemies[i]._enemyBody.getPosition().y < -400)){
-                _enemies.erase(_enemies.begin() + i);
-            } else {
-                _enemies[i].update();
-            }
+            _energyBar->setValue(_energy);
             
-            if(PixelPerfectTest(_enemies[i]._enemyBody, _player->playerSprite)){
+            std::stringstream stream;
+            stream << std::setfill('0') << std::setw(4) << round(_score.getElapsedTime().asSeconds());
+            
+            _scoreDisplay.setString(stream.str());
+            _scoreDisplay.setOrigin(_scoreDisplay.getLocalBounds().width/2, _scoreDisplay.getLocalBounds().height/2+150);
+            _scoreDisplay.setPosition(_data->window.getSize().x/2, _data->window.getSize().y/2);
+            
+            for (int i  = 0; i < _enemies.size(); i++) {
+                if((_enemies[i]._enemyBody.getPosition().x > _data->window.getSize().x*1.5 || _enemies[i]._enemyBody.getPosition().x < -400) && (_enemies[i]._enemyBody.getPosition().y > _data->window.getSize().y*1.5 || _enemies[i]._enemyBody.getPosition().y < -400)){
+                    _enemies.erase(_enemies.begin() + i);
+                } else {
+                    _enemies[i].update();
+                }
+                
+                if(PixelPerfectTest(_enemies[i]._enemyBody, _player->playerSprite)){
+                    _playBoom = true;
+                    _boom->setPosition(_player->playerSprite.getPosition());
+                    _data->backgroundMusic.setVolume(50);
+                    _explosionSound.play();
+                }
+            }
+        } else {
+            if(_boom->hasPlayed()){
                 this->_data->machine.AddState(StateRef(new MainMenuState(_data)), true);
+                _explosionSound.pause();
+                _data->backgroundMusic.setVolume(55);
             }
+            _boom->tick();
         }
-        
-        
-        
     }
     
     void GameState::Draw(float dt)
@@ -165,13 +188,18 @@ namespace mp{
     
         this->_data->window.draw(_scoreDisplay);
         //        this->_playerGhost->draw();
-        this->_player->draw();
-        
-        for (int i  = 0; i < _enemies.size(); i++) {
-            _enemies[i].draw();
+        if(!_playBoom){
+            this->_player->draw();
+            
+            for (int i  = 0; i < _enemies.size(); i++) {
+                _enemies[i].draw();
+            }
+            
+            _energyBar->draw();
+        } else {
+            _boom->draw();
         }
         
-        _energyBar->draw();
         
         this->_data->window.draw(this->_data->cursor);
         this->_data->window.display();

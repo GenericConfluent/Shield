@@ -41,6 +41,8 @@ namespace mp {
         this->_data->assets.LoadTexture("Bar:95", (resourcePath() + "Assets/Images/ProgressBar/Bar-95.png"));
         this->_data->assets.LoadTexture("Bar:100", (resourcePath() + "Assets/Images/ProgressBar/Bar-Full.png"));
         
+        this->_data->assets.LoadTexture("Explosion", (resourcePath() + "Assets/Images/explosion.png"));
+        
         
         _background.setTexture(this->_data->assets.GetTexture("SplashState:Logo"));
         

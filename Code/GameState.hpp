@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <vector>
 #include "State.hpp"
 #include "Game.hpp"
@@ -17,6 +18,7 @@
 #include "Enemy.hpp"
 #include "ResourcePath.hpp"
 #include "ProgressBar.hpp"
+#include "Explosion.hpp"
 
 namespace mp {
     class Player;
@@ -67,6 +69,10 @@ namespace mp {
         sf::Clock _pressTime;
         
         std::vector<Enemy> _enemies;
+        
+        Explosion * _boom;
+        bool _playBoom = false;
+        sf::Sound _explosionSound;
         
         // Game state
         float _slowMotion = 1.0;

@@ -32,11 +32,11 @@ namespace mp {
         float currentTime = this->_clock.getElapsedTime().asSeconds();
         float accumulator = 0.0f;
 
-        sf::Music backgroundMusic;
-        backgroundMusic.openFromFile(resourcePath() + "Assets/Audio/Sounds/Origin.wav");
-        backgroundMusic.play();
-        backgroundMusic.setVolume(55);
-        backgroundMusic.setLoop(true);
+        
+        _data->backgroundMusic.openFromFile(resourcePath() + "Assets/Audio/Music/Origin.wav");
+        _data->backgroundMusic.play();
+        _data->backgroundMusic.setVolume(55);
+        _data->backgroundMusic.setLoop(true);
         
         while (this->_data->window.isOpen())
         {

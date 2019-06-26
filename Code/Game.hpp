@@ -21,6 +21,7 @@ namespace  mp{
         AssetManager assets;
         StateMachine machine;
         InputManager input;
+        sf::Music backgroundMusic;
     };
 
     typedef std::shared_ptr<GameData> GameDataRef;

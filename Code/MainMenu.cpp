@@ -31,20 +31,32 @@ namespace mp {
         _data->assets.LoadFont("SpaceAge", (resourcePath() + "Assets/Fonts/space age.ttf"));
         
         // Set up the GUI
+        sf::Vector2f lineSize(float(_data->window.getSize().x)/2.895, 5.0);
+        
         title.setFont(_data->assets.GetFont("SpaceAge"));
         title.setString("Shield");
         title.setCharacterSize(150);
         title.setPosition((_data->window.getSize().x/2) - title.getLocalBounds().width/2, 10.0);
         
-        line.setSize(sf::Vector2f(float(_data->window.getSize().x)/1.86, 5.0));
+        line.setSize(lineSize);
         line.setPosition(0.0, _data->window.getSize().y/1.5);
         line.setFillColor(sf::Color(255,255,255));
         
         heading.setFont(_data->assets.GetFont("Orbiter"));
-        heading.setString("Press G and Click");
+        heading.setString("Play Game(G)");
         heading.setCharacterSize(50);
         heading.setOrigin(heading.getLocalBounds().width, 0.0);
         heading.setPosition(line.getPosition().x + line.getLocalBounds().width, line.getPosition().y - 55);
+        
+        aboutline.setSize(lineSize);
+        aboutline.setPosition(0.0, line.getPosition().y+100);
+        aboutline.setFillColor(sf::Color(255,255,255));
+        
+        aboutheading.setFont(_data->assets.GetFont("Orbiter"));
+        aboutheading.setString("Information(A)");
+        aboutheading.setCharacterSize(50);
+        aboutheading.setOrigin(aboutheading.getLocalBounds().width, 0.0);
+        aboutheading.setPosition(aboutline.getPosition().x + aboutline.getLocalBounds().width, aboutline.getPosition().y - 55);
         
         background.setTexture(_data->assets.GetTexture("MBackground"));
         background.setScale(0.55, 0.55);
@@ -73,6 +85,26 @@ namespace mp {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Keyboard::isKeyPressed(sf::Keyboard::G)){
             transition = true;
         }
+        
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::G))){
+            transition = true;
+        }
+        
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::G)){
+            heading.setFillColor(sf::Color(51, 255, 178));
+            line.setFillColor(sf::Color(51, 255, 178));
+        } else {
+            heading.setFillColor(sf::Color(255,255,255));
+            line.setFillColor(sf::Color(255,255,255));
+        }
+        
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::G))){
+            aboutheading.setFillColor(sf::Color(51, 255, 178));
+            aboutline.setFillColor(sf::Color(51, 255, 178));
+        } else {
+            aboutheading.setFillColor(sf::Color(255,255,255));
+            aboutline.setFillColor(sf::Color(255,255,255));
+        }
     }
     
     void MainMenuState::Update(float dt)
@@ -86,6 +118,8 @@ namespace mp {
             line.move(-_transitionSpeed, 0.0);
             title.move(0.0, -_transitionSpeed);
             heading.setPosition(line.getPosition().x + line.getLocalBounds().width, heading.getPosition().y);
+            aboutheading.setPosition(line.getPosition().x + line.getLocalBounds().width, aboutheading.getPosition().y);
+            aboutline.setPosition(line.getPosition().x, aboutline.getPosition().y);
         }
         
         if(title.getPosition().y <= -300 && line.getPosition().x <= -500){
@@ -105,6 +139,8 @@ namespace mp {
         this->_data->window.draw(title);
         this->_data->window.draw(line);
         this->_data->window.draw(heading);
+        this->_data->window.draw(aboutline);
+        this->_data->window.draw(aboutheading);
         
         this->_data->window.draw(this->_data->cursor);
         this->_data->window.display();

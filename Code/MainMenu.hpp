@@ -37,6 +37,11 @@ namespace mp {
         sf::Text heading;
         sf::RectangleShape line;
         
+        sf::Text aboutheading;
+        sf::RectangleShape aboutline;
+        
+
+        
         sf::Sprite background;
         
         guiTransitionOut Out;
