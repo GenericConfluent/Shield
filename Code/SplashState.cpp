@@ -43,6 +43,8 @@ namespace mp {
         
         this->_data->assets.LoadTexture("Explosion", (resourcePath() + "Assets/Images/explosion.png"));
         this->_data->assets.LoadTexture("TimeStop", (resourcePath() + "Assets/Images/TimeStop.png"));
+        this->_data->assets.LoadTexture("UnlimShield", (resourcePath() + "Assets/Images/UnlimShield.png"));
+
         
         
         _background.setTexture(this->_data->assets.GetTexture("SplashState:Logo"));

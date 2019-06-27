@@ -13,7 +13,6 @@
 #include <ctime>
 #include <cmath>
 #include <iostream>
-#include <random>
 #include "GameState.hpp"
 #include "MainMenu.hpp"
 #include "Collision.hpp"
@@ -25,26 +24,6 @@ namespace mp{
 //    std::vector<sf::Sprite> playerGhosts;
 //    sf::Clock ghostClock;
 //    std::vector<unsigned int> ghosttimerdelay;
-    
-    sf::Vector2f GameState::getRandomPositionOnWindow(sf::Vector2f position){
-        const int border = 50;
-        sf::Vector2f newPosition;
-        
-        std::random_device rd;  //Will be used to obtain a seed for the
-        //random number engine
-        std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded
-        // with rd()
-        std::uniform_int_distribution<> disx(border, (int)(_data->window.getSize().x));
-        std::uniform_int_distribution<> disy(border, (int)(_data->window.getSize().y));
-        
-        do {
-            
-            newPosition = sf::Vector2f(disx(gen), 0);
-            newPosition = sf::Vector2f(newPosition.x, disy(gen));
-        } while (!(sqrt(pow((newPosition.x-position.x), 2)+pow((newPosition.y-position.y), 2)) > 100));
-        
-        return newPosition;
-    }
     
     GameState::GameState(GameDataRef data) : _data(data)
     {
@@ -89,6 +68,8 @@ namespace mp{
         
         _explosionSound.setBuffer(buffer);
         _explosionSound.setVolume(100);
+        
+        _powerUpManager = new PowerUpManager(_data, _player->playerSprite);
         
     }
     
@@ -153,11 +134,11 @@ namespace mp{
             
             if(_spawnClock.getElapsedTime().asSeconds() > _waitTime){
                 if (_waitTime > 1.0) {
-                    _waitTime = 3 - float(_score.getElapsedTime().asSeconds()) / float(30 * ceil((double)(_slowMotion/5.0)));
+                    _waitTime = 3 - float(_score.getElapsedTime().asSeconds()) / float(30 * ceil((double)(_powerUpManager->getGameSpeed()/5.0)));
                 }
                 
                 if (_waitTime > 0.5 && _waitTime <= 1) {
-                    _waitTime = 5 - float(_score.getElapsedTime().asSeconds()) / float(100 * ceil((double)(_slowMotion/5.0)));
+                    _waitTime = 5 - float(_score.getElapsedTime().asSeconds()) / float(100 * ceil((double)(_powerUpManager->getGameSpeed()/5.0)));
                 }
                 
                 Enemy enemy(_data ,_player->playerSprite.getPosition());
@@ -182,7 +163,7 @@ namespace mp{
                 if((_enemies[i]._enemyBody.getPosition().x > _data->window.getSize().x*1.5 || _enemies[i]._enemyBody.getPosition().x < -400) && (_enemies[i]._enemyBody.getPosition().y > _data->window.getSize().y*1.5 || _enemies[i]._enemyBody.getPosition().y < -400)){
                     _enemies.erase(_enemies.begin() + i);
                 } else {
-                    _enemies[i].update(_slowMotion, _score.getElapsedTime().asSeconds());
+                    _enemies[i].update(_powerUpManager->getGameSpeed(), _score.getElapsedTime().asSeconds());
                 }
                 
                 if(PixelPerfectTest(_enemies[i]._enemyBody, _player->playerSprite)){
@@ -194,46 +175,7 @@ namespace mp{
                 }
             }
             
-            if (_buffSpawnClock.getElapsedTime().asSeconds() > 14.5) {
-                std::random_device rd;  //Will be used to obtain a seed for the
-                //random number engine
-                std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded
-                // with rd()
-                std::uniform_int_distribution<> dis(0, 1);
-                
-                switch (dis(gen)) {
-                    case 0:{
-                        sf::Sprite sprite;
-                        sprite.setTexture(_data->assets.GetTexture("TimeStop"));
-                        sprite.scale(0.099, 0.099);
-                        sprite.setPosition(getRandomPositionOnWindow(_player->playerSprite.getPosition()));
-                        _timeStops.push_back(sprite);
-                        break;
-                    }
-                        
-
-                    default:
-                        break;
-                }
-                _buffSpawnClock.restart();
-            }
-            
-            for (int i = 0; i < _timeStops.size(); i++) {
-                if(PixelPerfectTest(_timeStops[i], _player->playerSprite)){
-                    _slowMotion = 15.0;
-                    _timeStops.erase(_timeStops.begin()+i);
-                    _buffDuration.restart();
-                    _data->backgroundMusic.setPitch(0.5);
-                }
-            }
-            
-            if(_slowMotion > 1.5){
-                if(_buffDuration.getElapsedTime().asSeconds() > 8){
-                    _slowMotion = 1.0;
-                    _data->backgroundMusic.setPitch(1);
-                }
-            }
-            
+            _powerUpManager->update();
         } else {
             if(_boom->hasPlayed()){
                 this->_data->machine.AddState(StateRef(new MainMenuState(_data)), true);
@@ -259,9 +201,7 @@ namespace mp{
                 _enemies[i].draw();
             }
             
-            for (int i = 0; i < _timeStops.size(); i++) {
-                this->_data->window.draw(_timeStops[i]);
-            }
+            _powerUpManager->draw();
             
             _energyBar->draw();
         } else {

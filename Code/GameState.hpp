@@ -19,6 +19,7 @@
 #include "ResourcePath.hpp"
 #include "ProgressBar.hpp"
 #include "Explosion.hpp"
+#include "PowerUps.hpp"
 
 namespace mp {
     class Player;
@@ -55,7 +56,6 @@ namespace mp {
         GameDataRef _data;
         
         sf::Music _bgmusic;
-        
         sf::Sprite _background;
         
         Player * _player;
@@ -64,7 +64,6 @@ namespace mp {
         float _waitTime = 1.0;
         sf::Clock _spawnClock;
         
-        sf::Clock _buffSpawnClock;
         sf::Clock _buffDuration;
         
         sf::Clock _score;
@@ -72,7 +71,6 @@ namespace mp {
         ProgressBar * _energyBar;
         int _energy = 100;
         sf::Clock _subTime;
-        
         sf::Clock _pressTime;
         
         std::vector<Enemy> _enemies;
@@ -81,9 +79,11 @@ namespace mp {
         bool _playBoom = false;
         sf::Sound _explosionSound;
         
+        
+        PowerUpManager * _powerUpManager;
+        
         // Game state
-        float _slowMotion = 1.0;
-        std::vector<sf::Sprite> _timeStops;
+
         
         
     };

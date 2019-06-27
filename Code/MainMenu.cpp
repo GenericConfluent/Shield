@@ -58,6 +58,16 @@ namespace mp {
         aboutheading.setOrigin(aboutheading.getLocalBounds().width, 0.0);
         aboutheading.setPosition(aboutline.getPosition().x + aboutline.getLocalBounds().width, aboutline.getPosition().y - 55);
         
+        leaveline.setSize(lineSize);
+        leaveline.setPosition(0.0, aboutline.getPosition().y+100);
+        leaveline.setFillColor(sf::Color(255,255,255));
+        
+        leaveheading.setFont(_data->assets.GetFont("Orbiter"));
+        leaveheading.setString("Leave App(Esc)");
+        leaveheading.setCharacterSize(50);
+        leaveheading.setOrigin(aboutheading.getLocalBounds().width, 0.0);
+        leaveheading.setPosition(leaveline.getPosition().x + leaveline.getLocalBounds().width, leaveline.getPosition().y - 55);
+        
         background.setTexture(_data->assets.GetTexture("MBackground"));
         background.setScale(0.55, 0.55);
         background.setOrigin(background.getLocalBounds().width/2, background.getLocalBounds().height/2);
@@ -90,6 +100,12 @@ namespace mp {
             transition = true;
         }
         
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::G)) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::A))){
+            _data->window.close();
+        }
+        
+        
+        
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::G)){
             heading.setFillColor(sf::Color(51, 255, 178));
             line.setFillColor(sf::Color(51, 255, 178));
@@ -104,6 +120,14 @@ namespace mp {
         } else {
             aboutheading.setFillColor(sf::Color(255,255,255));
             aboutline.setFillColor(sf::Color(255,255,255));
+        }
+        
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::G)) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::A))){
+            leaveheading.setFillColor(sf::Color(51, 255, 178));
+            leaveline.setFillColor(sf::Color(51, 255, 178));
+        } else {
+            leaveheading.setFillColor(sf::Color(255,255,255));
+            leaveline.setFillColor(sf::Color(255,255,255));
         }
     }
     
@@ -141,6 +165,9 @@ namespace mp {
         this->_data->window.draw(heading);
         this->_data->window.draw(aboutline);
         this->_data->window.draw(aboutheading);
+        this->_data->window.draw(leaveline);
+        this->_data->window.draw(leaveheading);
+        
         
         this->_data->window.draw(this->_data->cursor);
         this->_data->window.display();

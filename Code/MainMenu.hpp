@@ -40,6 +40,9 @@ namespace mp {
         sf::Text aboutheading;
         sf::RectangleShape aboutline;
         
+        sf::Text leaveheading;
+        sf::RectangleShape leaveline;
+        
 
         
         sf::Sprite background;
