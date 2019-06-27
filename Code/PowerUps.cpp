@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <random>
 #include <ctime>
+#include <iostream>
 #include "PowerUps.hpp"
 #include "Collision.hpp"
 
@@ -76,7 +77,7 @@ namespace mp {
                 }
                     
                 case PowerUp::INFINITESHIELD:{
-                    
+                    _infiniteShield = true;
                     break;
                 }
                     
@@ -91,6 +92,11 @@ namespace mp {
             case PowerUp::TIMESTOP:{
                 _slowMotion = 1.0;
                 _data->backgroundMusic.setPitch(1);
+                break;
+            }
+                
+            case PowerUp::INFINITESHIELD:{
+                _infiniteShield = false;
                 break;
             }
                 
@@ -140,7 +146,7 @@ namespace mp {
         
         for (int i = 0; i < _currentBuffs.size(); i++) {
             if(_currentBuffs[i].second.getElapsedTime().asSeconds() >= PowerUp::PowerUpDuration[_currentBuffs[i].first]){
-                f_RemoveBuffs(i);
+                f_RemoveBuffs(_currentBuffs[i].first);
                 _currentBuffs.erase(_currentBuffs.begin()+i);
             }
         }
@@ -160,6 +166,10 @@ namespace mp {
     
     float PowerUpManager::getGameSpeed(){
         return _slowMotion;
+    }
+    
+    bool PowerUpManager::infiniteShield(){
+        return _infiniteShield;
     }
     
     

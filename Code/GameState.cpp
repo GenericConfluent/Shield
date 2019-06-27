@@ -146,11 +146,17 @@ namespace mp{
                 _spawnClock.restart();
             }
             
-            if (_pressTime.getElapsedTime().asSeconds() >= 2.5 && _energy < 100) {
-                _energy += 5;
+            if (_powerUpManager->infiniteShield()) {
+                _energy = 100;
+                _energyBar->setValue(3000);
+            } else {
+                if (_pressTime.getElapsedTime().asSeconds() >= 2.5 && _energy < 100) {
+                    _energy += 5;
+                }
+                
+                _energyBar->setValue(_energy);
             }
             
-            _energyBar->setValue(_energy);
             
             std::stringstream stream;
             stream << std::setfill('0') << std::setw(4) << round(_score.getElapsedTime().asSeconds());

@@ -29,9 +29,11 @@ namespace mp {
         void draw();
         
         float getGameSpeed();
+        bool infiniteShield();
     private:
         
         float _slowMotion = 1.0;
+        bool _infiniteShield = false;
         
         sf::Vector2f f_GetRandomPositionOnWindow(sf::Vector2f position);
         std::pair<bool, int> f_CheckPowerUpExists(int powerUp);

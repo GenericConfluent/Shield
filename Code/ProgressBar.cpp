@@ -104,6 +104,10 @@ namespace mp {
             case 100:
                 _bar.setTexture(_data->assets.GetTexture("Bar:100"));
                 break;
+                
+            case 3000:
+                _bar.setTexture(_data->assets.GetTexture("Bar:POWER"));
+                break;
 
             default:
                 break;

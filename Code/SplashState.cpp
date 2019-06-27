@@ -40,6 +40,7 @@ namespace mp {
         this->_data->assets.LoadTexture("Bar:90", (resourcePath() + "Assets/Images/ProgressBar/Bar-90.png"));
         this->_data->assets.LoadTexture("Bar:95", (resourcePath() + "Assets/Images/ProgressBar/Bar-95.png"));
         this->_data->assets.LoadTexture("Bar:100", (resourcePath() + "Assets/Images/ProgressBar/Bar-Full.png"));
+        this->_data->assets.LoadTexture("Bar:POWER", (resourcePath() + "Assets/Images/ProgressBar/Bar-Eter.png"));
         
         this->_data->assets.LoadTexture("Explosion", (resourcePath() + "Assets/Images/explosion.png"));
         this->_data->assets.LoadTexture("TimeStop", (resourcePath() + "Assets/Images/TimeStop.png"));
