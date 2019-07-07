@@ -7,7 +7,6 @@
 //
 
 #include <algorithm>
-#include <random>
 #include <ctime>
 #include <iostream>
 #include "PowerUps.hpp"
@@ -81,6 +80,11 @@ namespace mp {
                     break;
                 }
                     
+                case PowerUp::BOMB:{
+                    _bomb = true;
+                    break;
+                }
+                    
                 default:
                     break;
             }
@@ -99,7 +103,11 @@ namespace mp {
                 _infiniteShield = false;
                 break;
             }
-                
+            
+            case PowerUp::BOMB:{
+                _bomb = false;
+                break;
+            }
                 
             default:
                 break;
@@ -109,11 +117,10 @@ namespace mp {
     void PowerUpManager::update(){
         
         if(_buffSpawnClock.getElapsedTime().asSeconds() >= _buffSpawnFrequency){
-            std::random_device rd;  //Will be used to obtain a seed for the
             //random number engine
             std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded
             // with rd()
-            std::uniform_int_distribution<> dis(0, 1);
+            std::uniform_int_distribution<> dis(0, 2);
             
             switch (dis(gen)) {
                 case PowerUp::TIMESTOP:{
@@ -133,6 +140,16 @@ namespace mp {
                     sprite.setPosition(f_GetRandomPositionOnWindow(_playerRef->getPosition()));
                     
                     _onFieldPowerUps.push_back(std::make_pair(PowerUp::INFINITESHIELD, sprite));
+                    break;
+                }
+                    
+                case PowerUp::BOMB:{
+                    sf::Sprite sprite;
+                    sprite.setTexture(_data->assets.GetTexture("BOMB"));
+                    sprite.scale(0.099, 0.099);
+                    sprite.setPosition(f_GetRandomPositionOnWindow(_playerRef->getPosition()));
+                    
+                    _onFieldPowerUps.push_back(std::make_pair(PowerUp::BOMB, sprite));
                     break;
                 }
                     
@@ -170,6 +187,10 @@ namespace mp {
     
     bool PowerUpManager::infiniteShield(){
         return _infiniteShield;
+    }
+    
+    bool PowerUpManager::bomb(){
+        return _bomb;
     }
     
     

@@ -45,6 +45,7 @@ namespace mp {
         this->_data->assets.LoadTexture("Explosion", (resourcePath() + "Assets/Images/explosion.png"));
         this->_data->assets.LoadTexture("TimeStop", (resourcePath() + "Assets/Images/TimeStop.png"));
         this->_data->assets.LoadTexture("UnlimShield", (resourcePath() + "Assets/Images/UnlimShield.png"));
+        this->_data->assets.LoadTexture("BOMB", (resourcePath() + "Assets/Images/bomb.png"));
 
         
         

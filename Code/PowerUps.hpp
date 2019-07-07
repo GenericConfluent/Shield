@@ -9,6 +9,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <utility>
+#include <random>
 #include "Game.hpp"
 
 
@@ -17,7 +18,8 @@ namespace mp {
     public:
         const static int TIMESTOP = 0;
         const static int INFINITESHIELD = 1;
-        inline constexpr static float PowerUpDuration[] = {8.0, 10.0};
+        const static int BOMB = 2;
+        inline constexpr static float PowerUpDuration[] = {8.0, 10.0, 0.5};
     };
     
     class PowerUpManager {
@@ -30,10 +32,12 @@ namespace mp {
         
         float getGameSpeed();
         bool infiniteShield();
+        bool bomb();
     private:
         
         float _slowMotion = 1.0;
         bool _infiniteShield = false;
+        bool _bomb = false;
         
         sf::Vector2f f_GetRandomPositionOnWindow(sf::Vector2f position);
         std::pair<bool, int> f_CheckPowerUpExists(int powerUp);
@@ -41,7 +45,8 @@ namespace mp {
         void f_ApplyBuffs();
         void f_RemoveBuffs(int buffType);
         
-        
+        std::random_device rd;  //Will be used to obtain a seed for the random device
+
         GameDataRef _data;
         
         sf::Sprite * _playerRef;

@@ -71,6 +71,7 @@ namespace mp{
         
         _powerUpManager = new PowerUpManager(_data, _player->playerSprite);
         
+        
     }
     
     void GameState::HandleInput()
@@ -158,6 +159,8 @@ namespace mp{
             }
             
             
+            
+            
             std::stringstream stream;
             stream << std::setfill('0') << std::setw(4) << round(_score.getElapsedTime().asSeconds());
             
@@ -179,8 +182,22 @@ namespace mp{
                     _data->backgroundMusic.setVolume(50);
                     _explosionSound.play();
                 }
+                
+                if (_powerUpManager->bomb()) {
+                    Explosion newExp(_data);
+                    newExp.setPosition(_enemies[i]._enemyBody.getPosition());
+                    _enemies.erase(_enemies.begin() + i);
+                    _otherExplosions.push_back(newExp);
+                }
             }
-            
+
+            for(int i = 0; i < _otherExplosions.size(); i++){
+                if (_otherExplosions[i].hasPlayed()) {
+                    _otherExplosions.erase(_otherExplosions.begin()+i);
+                }
+                _otherExplosions[i].tick();
+            }
+
             _powerUpManager->update();
         } else {
             if(_boom->hasPlayed()){
@@ -207,11 +224,16 @@ namespace mp{
                 _enemies[i].draw();
             }
             
+            
+            for(int i = 0; i < _otherExplosions.size(); i++){
+                _data->window.draw(_otherExplosions[i]._spriteSheet);
+            }
+            
             _powerUpManager->draw();
             
             _energyBar->draw();
         } else {
-            _boom->draw();
+            _data->window.draw(_boom->_spriteSheet);
         }
         
         

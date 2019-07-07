@@ -7,6 +7,7 @@
 //
 
 #include "Explosion.hpp"
+#include "ResourcePath.hpp"
 
 namespace mp {
     Explosion::Explosion(GameDataRef data) : _data(data){
@@ -33,6 +34,18 @@ namespace mp {
         _spriteSheet.setTextureRect(_visible);
     }
     
+    Explosion& Explosion::operator= (const Explosion &explosion){
+        
+        _data = explosion._data;
+        _visible = explosion._visible;
+        _done = explosion._done;
+        _spriteSheet.setTexture(_data->assets.GetTexture("Explosion"));
+        _spriteSheet.setTextureRect(_visible);
+        
+        // return the existing object so we can chain this operator
+        return *this;
+    }
+    
     void Explosion::setPosition(sf::Vector2f position){
 //        _spriteSheet.setPosition(position.x - (_size/2), position.y - (_size/2));
         _spriteSheet.setPosition(position);
@@ -45,9 +58,5 @@ namespace mp {
     void Explosion::reset(){
         _visible = sf::IntRect(0,0,512,512);
         _spriteSheet.setTextureRect(_visible);
-    }
-    
-    void Explosion::draw(){
-        _data->window.draw(_spriteSheet);
     }
 }

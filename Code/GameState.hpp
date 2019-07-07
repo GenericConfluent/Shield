@@ -12,6 +12,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <vector>
+#include <list>
+#include <iterator>
+#include <utility>
 #include "State.hpp"
 #include "Game.hpp"
 #include "Player.hpp"
@@ -79,12 +82,11 @@ namespace mp {
         bool _playBoom = false;
         sf::Sound _explosionSound;
         
+        std::vector<Explosion> _otherExplosions;
+        
         
         PowerUpManager * _powerUpManager;
         
         // Game state
-
-        
-        
     };
 }

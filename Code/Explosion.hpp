@@ -17,19 +17,22 @@ namespace mp {
         
         void reset();
         void tick();
-        void draw();
         
         void setPosition(sf::Vector2f position);
         bool hasPlayed();
-    private:
-        GameDataRef _data;
         
+        Explosion& operator= (const Explosion &explosion);
+        
+        sf::Sprite _spriteSheet;
+    private:
         bool _done = false;
         
-        const int _size = 512;
+        GameDataRef _data;
         
+        const int _size = 512;
+        sf::Texture texture;
         sf::IntRect _visible;
-        sf::Sprite _spriteSheet;
+        
     };
     
 }
