@@ -74,9 +74,10 @@ mod menu {
     fn check_selection(
         keyboard_input: Res<Input<KeyCode>>,
         mut app_exit_events: ResMut<Events<bevy::app::AppExit>>,
+        mut game_state: ResMut<NextState<GameState>>,
     ) {
         if keyboard_input.pressed(KeyCode::P) {
-            // Change to game state.
+            game_state.set(GameState::Game);
             return;
         }
         if keyboard_input.pressed(KeyCode::H) {
