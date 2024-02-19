@@ -21,14 +21,14 @@ namespace mp {
     void MainMenuState::Init()
     {
         // Load textures
-        _data->assets.LoadTexture("Background", (resourcePath() + "Assets/Images/Background.png"));
-        _data->assets.LoadTexture("MBackground", (resourcePath() + "Assets/Images/MenuBackground.jpg"));
-        _data->assets.LoadTexture("Player", (resourcePath() + "Assets/Images/Player.png"));
-        _data->assets.LoadTexture("Enemy", (resourcePath() + "Assets/Images/Enemy.png"));
+        _data->assets.LoadTexture("Background", "assets/Images/Background.png");
+        _data->assets.LoadTexture("MBackground", "assets/Images/MenuBackground.jpg");
+        _data->assets.LoadTexture("Player", "assets/Images/Player.png");
+        _data->assets.LoadTexture("Enemy", "assets/Images/Enemy.png");
         // Load fonts
-        _data->assets.LoadFont("Saucer", (resourcePath() + "Assets/Fonts/SpaceMono.ttf"));
-        _data->assets.LoadFont("Orbiter", (resourcePath() + "Assets/Fonts/earthorbiter.ttf"));
-        _data->assets.LoadFont("SpaceAge", (resourcePath() + "Assets/Fonts/space age.ttf"));
+        _data->assets.LoadFont("Saucer", "assets/Fonts/SpaceMono.ttf");
+        _data->assets.LoadFont("Orbiter", "assets/Fonts/earthorbiter.ttf");
+        _data->assets.LoadFont("SpaceAge", "assets/Fonts/space age.ttf");
         
         // Set up the GUI
         sf::Vector2f lineSize(float(_data->window.getSize().x)/2.895, 5.0);
@@ -109,6 +109,7 @@ namespace mp {
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::G)){
             heading.setFillColor(sf::Color(51, 255, 178));
             line.setFillColor(sf::Color(51, 255, 178));
+            _data->machine.AddState(StateRef(new GameState(_data)), true);
         } else {
             heading.setFillColor(sf::Color(255,255,255));
             line.setFillColor(sf::Color(255,255,255));
@@ -125,6 +126,7 @@ namespace mp {
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::G)) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::A))){
             leaveheading.setFillColor(sf::Color(51, 255, 178));
             leaveline.setFillColor(sf::Color(51, 255, 178));
+            _data->window.close();
         } else {
             leaveheading.setFillColor(sf::Color(255,255,255));
             leaveline.setFillColor(sf::Color(255,255,255));

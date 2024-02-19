@@ -17,7 +17,7 @@ namespace mp {
         _data->window.create(sf::VideoMode::getDesktopMode(), title, sf::Style::Fullscreen);
         _data->machine.AddState(StateRef(new SplashState(this->_data)));
         _data->window.setMouseCursorVisible(false);
-        _data->assets.LoadTexture("Cursor", (resourcePath() + "Assets/Images/Cursor.png"));
+        _data->assets.LoadTexture("Cursor", "assets/Images/Cursor.png");
         _data->cursor.setTexture(this->_data->assets.GetTexture("Cursor"));
         _data->cursor.setOrigin(_data->cursor.getLocalBounds().width/2, _data->cursor.getLocalBounds().height/2);
         
@@ -33,7 +33,7 @@ namespace mp {
         float accumulator = 0.0f;
 
         
-        _data->backgroundMusic.openFromFile(resourcePath() + "Assets/Audio/Music/Origin.wav");
+        _data->backgroundMusic.openFromFile("assets/Audio/Music/Origin.wav");
         _data->backgroundMusic.play();
         _data->backgroundMusic.setVolume(55);
         _data->backgroundMusic.setLoop(true);

@@ -12,10 +12,11 @@
 #include "PowerUps.hpp"
 #include "Collision.hpp"
 
-
-
-
 namespace mp {
+    const int PowerUp::TIMESTOP = 0;
+    const int PowerUp::INFINITESHIELD = 1;
+    const int PowerUp::BOMB = 2;
+
     PowerUpManager::PowerUpManager(GameDataRef data, sf::Sprite & player): _data(data){
         _buffSpawnClock.restart();
         _playerRef = &player;

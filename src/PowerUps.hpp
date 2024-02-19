@@ -16,9 +16,9 @@
 namespace mp {
     class PowerUp{
     public:
-        const static int TIMESTOP = 0;
-        const static int INFINITESHIELD = 1;
-        const static int BOMB = 2;
+        const static int TIMESTOP;
+        const static int INFINITESHIELD;
+        const static int BOMB;
         inline constexpr static float PowerUpDuration[] = {8.0, 10.0, 0.5};
     };
     

@@ -64,7 +64,7 @@ namespace mp{
         
         
         sf::SoundBuffer buffer;
-        buffer.loadFromFile((resourcePath() + "Assets/Audio/Sounds/boom.wav"));
+        buffer.loadFromFile("assets/Audio/Sounds/boom.wav");
         
         _explosionSound.setBuffer(buffer);
         _explosionSound.setVolume(100);
