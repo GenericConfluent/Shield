@@ -28,15 +28,14 @@ namespace  mp{
     class Game{
     public:
         Game(std::string title);
+        void run();
         
     private:
         GameDataRef _data = std::make_shared<GameData>();
         
-        
-        const float dt = 1.0f / 60.0f;// Update runs at 60 frames per second
+        constexpr static float dt = 1.0f / 60.0f;// Update runs at 60 frames per second
         sf::Clock _clock;
         
-        void Run();
     };
 }
 

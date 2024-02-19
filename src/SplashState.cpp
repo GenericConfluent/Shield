@@ -10,45 +10,38 @@
 
 #include "ResourcePath.hpp"
 #include "MainMenu.hpp"
+#include <bits/utility.h>
+#include <cstring>
 #include <iostream>
+#include <array>
+#include <format>
 
 namespace mp {
-    SplashState::SplashState(GameDataRef data) : _data (data) {
-        
-    }
+    SplashState::SplashState(GameDataRef data) : _data (data) {}
     
+    // Why not in the constructor? Is there a delay between when we make the object and
+    // initialize it?
     void SplashState::Init(){
         // Dear me from 5 years ago: for loop. Look it up. Better yet: math.
-        this->_data->assets.LoadTexture("SplashState:Logo", "assets/Images/logo.png");
-        this->_data->assets.LoadTexture("Bar:0", "assets/Images/ProgressBar/Bar-0.png");
-        this->_data->assets.LoadTexture("Bar:5", "assets/Images/ProgressBar/Bar-5.png");
-        this->_data->assets.LoadTexture("Bar:10", "assets/Images/ProgressBar/Bar-10.png");
-        this->_data->assets.LoadTexture("Bar:15", "assets/Images/ProgressBar/Bar-15.png");
-        this->_data->assets.LoadTexture("Bar:20", "assets/Images/ProgressBar/Bar-20.png");
-        this->_data->assets.LoadTexture("Bar:25", "assets/Images/ProgressBar/Bar-25.png");
-        this->_data->assets.LoadTexture("Bar:30", "assets/Images/ProgressBar/Bar-30.png");
-        this->_data->assets.LoadTexture("Bar:35", "assets/Images/ProgressBar/Bar-35.png");
-        this->_data->assets.LoadTexture("Bar:40", "assets/Images/ProgressBar/Bar-40.png");
-        this->_data->assets.LoadTexture("Bar:45", "assets/Images/ProgressBar/Bar-45.png");
-        this->_data->assets.LoadTexture("Bar:50", "assets/Images/ProgressBar/Bar-50.png");
-        this->_data->assets.LoadTexture("Bar:55", "assets/Images/ProgressBar/Bar-55.png");
-        this->_data->assets.LoadTexture("Bar:60", "assets/Images/ProgressBar/Bar-60.png");
-        this->_data->assets.LoadTexture("Bar:65", "assets/Images/ProgressBar/Bar-65.png");
-        this->_data->assets.LoadTexture("Bar:70", "assets/Images/ProgressBar/Bar-70.png");
-        this->_data->assets.LoadTexture("Bar:75", "assets/Images/ProgressBar/Bar-75.png");
-        this->_data->assets.LoadTexture("Bar:80", "assets/Images/ProgressBar/Bar-80.png");
-        this->_data->assets.LoadTexture("Bar:85", "assets/Images/ProgressBar/Bar-85.png");
-        this->_data->assets.LoadTexture("Bar:90", "assets/Images/ProgressBar/Bar-90.png");
-        this->_data->assets.LoadTexture("Bar:95", "assets/Images/ProgressBar/Bar-95.png");
-        this->_data->assets.LoadTexture("Bar:100", "assets/Images/ProgressBar/Bar-Full.png");
-        this->_data->assets.LoadTexture("Bar:POWER", "assets/Images/ProgressBar/Bar-Eter.png");
+        // I'll fix this properly later.
         
+        this->_data->assets.LoadTexture("SplashState:Logo", "assets/Images/logo.png");
+
+        constexpr auto PB_PATH = "assets/Images/ProgressBar/Bar-{}.png";
+        std::string name, file_path;
+        name.reserve(7);
+        file_path.reserve(strlen(PB_PATH));
+        for (std::size_t i = 0; i <= 100; i += 5) {
+            name = std::format("Bar:{}", i);
+            file_path = std::format(PB_PATH, i);
+            this->_data->assets.LoadTexture(name, file_path);
+        }
+
+        this->_data->assets.LoadTexture("Bar:POWER", "assets/Images/ProgressBar/Bar-Eter.png");
         this->_data->assets.LoadTexture("Explosion", "assets/Images/explosion.png");
         this->_data->assets.LoadTexture("TimeStop", "assets/Images/TimeStop.png");
         this->_data->assets.LoadTexture("UnlimShield", "assets/Images/UnlimShield.png");
         this->_data->assets.LoadTexture("BOMB", "assets/Images/bomb.png");
-
-        
         
         _background.setTexture(this->_data->assets.GetTexture("SplashState:Logo"));
         
@@ -82,7 +75,6 @@ namespace mp {
     
     void SplashState::Update(float dt){
         if (this->_clock.getElapsedTime().asSeconds() > 2.0) {
-            // Switch To Main Menu
             this->_data->machine.AddState(StateRef(new MainMenuState(_data)), true);
         }
     }

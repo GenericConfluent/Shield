@@ -1,10 +1,7 @@
-
-
-#include "ResourcePath.hpp"
 #include "Game.hpp"
 
-int main(int, char const**)
-{
-    mp::Game("Simple Game");
-    return EXIT_SUCCESS;
+int main() {
+    mp::Game game = mp::Game("Shield");
+    game.run();
+    return 0;
 }
