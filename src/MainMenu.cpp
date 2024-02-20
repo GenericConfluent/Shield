@@ -1,13 +1,4 @@
-//
-//  MainMenu.cpp
-//  Simple game
-//
-//  Created by M Power on 2019-05-07.
-//  Copyright © 2019 M Power. All rights reserved.
-//
-
 #include "MainMenu.hpp"
-#include "ResourcePath.hpp"
 #include "GameState.hpp"
 #include <iostream>
 #include <cmath>

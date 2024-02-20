@@ -10,7 +10,6 @@
 #include "Game.hpp"
 #include "Player.hpp"
 #include "Enemy.hpp"
-#include "ResourcePath.hpp"
 #include "ProgressBar.hpp"
 #include "Explosion.hpp"
 #include "PowerUps.hpp"
