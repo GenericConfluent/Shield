@@ -12,23 +12,20 @@
 #include "Game.hpp"
 
 namespace mp {
-    class SplashState : public State{
+    class SplashState : public State {
     public:
         SplashState(GameDataRef data);
         
-        void Init();
+        void init();
         
-        void HandleInput();
-        void Update(float dt);
-        void Draw(float dt);
+        void handle_input();
+        void update(float dt);
+        void draw(float dt);
         
     private:
-        GameDataRef _data;
-        
-        sf::Clock _clock;
-        
-        sf::Sprite _background;
-        
+        GameDataRef data;
+        sf::Clock clock;
+        sf::Sprite background;
     };
 }
 

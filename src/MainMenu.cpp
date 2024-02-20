@@ -18,22 +18,22 @@ namespace mp {
         
     }
     
-    void MainMenuState::Init()
+    void MainMenuState::init()
     {
         // Load textures
-        _data->assets.LoadTexture("Background", "assets/Images/Background.png");
-        _data->assets.LoadTexture("MBackground", "assets/Images/MenuBackground.jpg");
-        _data->assets.LoadTexture("Player", "assets/Images/Player.png");
-        _data->assets.LoadTexture("Enemy", "assets/Images/Enemy.png");
+        _data->assets.load<sf::Texture>("Background", "assets/Images/Background.png");
+        _data->assets.load<sf::Texture>("MBackground", "assets/Images/MenuBackground.jpg");
+        _data->assets.load<sf::Texture>("Player", "assets/Images/Player.png");
+        _data->assets.load<sf::Texture>("Enemy", "assets/Images/Enemy.png");
         // Load fonts
-        _data->assets.LoadFont("Saucer", "assets/Fonts/SpaceMono.ttf");
-        _data->assets.LoadFont("Orbiter", "assets/Fonts/earthorbiter.ttf");
-        _data->assets.LoadFont("SpaceAge", "assets/Fonts/space age.ttf");
+        _data->assets.load<sf::Font>("Saucer", "assets/Fonts/SpaceMono.ttf");
+        _data->assets.load<sf::Font>("Orbiter", "assets/Fonts/earthorbiter.ttf");
+        _data->assets.load<sf::Font>("SpaceAge", "assets/Fonts/space age.ttf");
         
         // Set up the GUI
         sf::Vector2f lineSize(float(_data->window.getSize().x)/2.895, 5.0);
         
-        title.setFont(_data->assets.GetFont("SpaceAge"));
+        title.setFont(_data->assets.get<sf::Font>("SpaceAge"));
         title.setString("Shield");
         title.setCharacterSize(150);
         title.setPosition((_data->window.getSize().x/2) - title.getLocalBounds().width/2, 10.0);
@@ -42,7 +42,7 @@ namespace mp {
         line.setPosition(0.0, _data->window.getSize().y/1.5);
         line.setFillColor(sf::Color(255,255,255));
         
-        heading.setFont(_data->assets.GetFont("Orbiter"));
+        heading.setFont(_data->assets.get<sf::Font>("Orbiter"));
         heading.setString("Play Game(G)");
         heading.setCharacterSize(50);
         heading.setOrigin(heading.getLocalBounds().width, 0.0);
@@ -52,7 +52,7 @@ namespace mp {
         aboutline.setPosition(0.0, line.getPosition().y+100);
         aboutline.setFillColor(sf::Color(255,255,255));
         
-        aboutheading.setFont(_data->assets.GetFont("Orbiter"));
+        aboutheading.setFont(_data->assets.get<sf::Font>("Orbiter"));
         aboutheading.setString("Information(A)");
         aboutheading.setCharacterSize(50);
         aboutheading.setOrigin(aboutheading.getLocalBounds().width, 0.0);
@@ -62,13 +62,13 @@ namespace mp {
         leaveline.setPosition(0.0, aboutline.getPosition().y+100);
         leaveline.setFillColor(sf::Color(255,255,255));
         
-        leaveheading.setFont(_data->assets.GetFont("Orbiter"));
+        leaveheading.setFont(_data->assets.get<sf::Font>("Orbiter"));
         leaveheading.setString("Leave App(Esc)");
         leaveheading.setCharacterSize(50);
         leaveheading.setOrigin(aboutheading.getLocalBounds().width, 0.0);
         leaveheading.setPosition(leaveline.getPosition().x + leaveline.getLocalBounds().width, leaveline.getPosition().y - 55);
         
-        background.setTexture(_data->assets.GetTexture("MBackground"));
+        background.setTexture(_data->assets.get<sf::Texture>("MBackground"));
         background.setScale(0.55, 0.55);
         background.setOrigin(background.getLocalBounds().width/2, background.getLocalBounds().height/2);
         background.setPosition(_data->window.getSize().x/2, _data->window.getSize().y/2);
@@ -77,14 +77,11 @@ namespace mp {
         Out.linePos = sf::Vector2f(-(line.getLocalBounds().width) - 20, _data->window.getSize().y/1.5);
     }
     
-    void MainMenuState::HandleInput()
-    {
+    void MainMenuState::handle_input() {
         sf::Event event;
         
-        while (this->_data->window.pollEvent(event))
-        {
-            if (sf::Event::Closed == event.type)
-            {
+        while (this->_data->window.pollEvent(event)) {
+            if (sf::Event::Closed == event.type) {
                 this->_data->window.close();
             }
             if (sf::Event::KeyPressed == event.type) {
@@ -104,12 +101,10 @@ namespace mp {
             _data->window.close();
         }
         
-        
-        
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::G)){
             heading.setFillColor(sf::Color(51, 255, 178));
             line.setFillColor(sf::Color(51, 255, 178));
-            _data->machine.AddState(StateRef(new GameState(_data)), true);
+            // _data->machine.AddState(StateRef(new GameState(_data)), true);
         } else {
             heading.setFillColor(sf::Color(255,255,255));
             line.setFillColor(sf::Color(255,255,255));
@@ -133,7 +128,7 @@ namespace mp {
         }
     }
     
-    void MainMenuState::Update(float dt)
+    void MainMenuState::update(float dt)
     {
         sf::Vector2i mousePos = sf::Mouse::getPosition(this->_data->window);
         sf::Vector2f world_mousePos = this->_data->window.mapPixelToCoords(mousePos, _data->window.getView());
@@ -153,11 +148,9 @@ namespace mp {
             this->_data->machine.AddState(StateRef(new GameState(_data)), true);
             std::cout << "\nChange to game state\n";
         }
-        
-        
     }
     
-    void MainMenuState::Draw(float dt)
+    void MainMenuState::draw(float dt)
     {
         this->_data->window.clear( sf::Color(55,55,55) );
         
@@ -169,7 +162,6 @@ namespace mp {
         this->_data->window.draw(aboutheading);
         this->_data->window.draw(leaveline);
         this->_data->window.draw(leaveheading);
-        
         
         this->_data->window.draw(this->_data->cursor);
         this->_data->window.display();

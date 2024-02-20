@@ -24,23 +24,18 @@ namespace mp{
 //    std::vector<sf::Sprite> playerGhosts;
 //    sf::Clock ghostClock;
 //    std::vector<unsigned int> ghosttimerdelay;
+    GameState::GameState(GameDataRef data) : _data(data) {}
     
-    GameState::GameState(GameDataRef data) : _data(data)
-    {
-        
-    }
-    
-    void GameState::Init()
-    {
+    void GameState::init() {
         // Create the player
         _player = new Player(_data);
         // Set background
-        _background.setTexture(_data->assets.GetTexture("Background"));
+        _background.setTexture(_data->assets.get<sf::Texture>("Background"));
         _background.scale(0.5, 0.5);
         _background.setOrigin(_background.getLocalBounds().width/2, _background.getLocalBounds().height/2);
         _background.setPosition(_data->window.getSize().x/2, _data->window.getSize().y/2);
         // Setup the player
-        _player->playerSprite.setTexture(_data->assets.GetTexture("Player"));
+        _player->playerSprite.setTexture(_data->assets.get<sf::Texture>("Player"));
         _player->playerSprite.setPosition(_data->window.getSize().x/2, _data->window.getSize().y/2);
         
         _player->playerSprite.setOrigin(_player->playerSprite.getLocalBounds().width/2, _player->playerSprite.getLocalBounds().height/2);
@@ -48,7 +43,7 @@ namespace mp{
         
         _playerGhost = new Ghost(_data);
         
-        _scoreDisplay.setFont(_data->assets.GetFont("Saucer"));
+        _scoreDisplay.setFont(_data->assets.get<sf::Font>("Saucer"));
         _scoreDisplay.setFillColor(sf::Color(51, 255, 178, 200));
         _scoreDisplay.setString("0000");
         _scoreDisplay.setCharacterSize(300);
@@ -62,7 +57,6 @@ namespace mp{
         _boom->reset();
         _playBoom = false;
         
-        
         sf::SoundBuffer buffer;
         buffer.loadFromFile("assets/Audio/Sounds/boom.wav");
         
@@ -70,18 +64,13 @@ namespace mp{
         _explosionSound.setVolume(100);
         
         _powerUpManager = new PowerUpManager(_data, _player->playerSprite);
-        
-        
     }
     
-    void GameState::HandleInput()
-    {
+    void GameState::handle_input() {
         sf::Event event;
         
-        while (this->_data->window.pollEvent(event))
-        {
-            if (sf::Event::Closed == event.type)
-            {
+        while (this->_data->window.pollEvent(event)) {
+            if (sf::Event::Closed == event.type) {
                 this->_data->window.close();
             }
             if (sf::Event::KeyPressed == event.type) {
@@ -89,28 +78,25 @@ namespace mp{
             }
         }
         
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-            if(_energy != 0){
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if(_energy != 0) {
                 _player->playerSprite.move((-(cos(_player->playerSprite.getRotation()*3.14159265/180)*-3))*_player->getSpeed(), (sin(_player->playerSprite.getRotation()*3.14159265/180)*3)*_player->getSpeed());
-                if(_subTime.getElapsedTime().asMilliseconds() >= 200){
+                if(_subTime.getElapsedTime().asMilliseconds() >= 200) {
                     _energy -= 5;
                     _subTime.restart();
                 }
             }
             _pressTime.restart();
         }
-        
-        
     }
     
-    void GameState::Update(float dt)
-    {
+    void GameState::update(float dt) {
         sf::Vector2i mousePos = sf::Mouse::getPosition(this->_data->window);
         sf::Vector2f world_mousePos = this->_data->window.mapPixelToCoords(mousePos, _data->window.getView());
         
         this->_data->cursor.setPosition(world_mousePos);
         
-        if(!_playBoom){
+        if(!_playBoom) {
             sf::Vector2f playerPos = _player->playerSprite.getPosition();
             
             const float PI = 3.14159265;
@@ -157,9 +143,6 @@ namespace mp{
                 
                 _energyBar->setValue(_energy);
             }
-            
-            
-            
             
             std::stringstream stream;
             stream << std::setfill('0') << std::setw(4) << round(_score.getElapsedTime().asSeconds());
@@ -209,7 +192,7 @@ namespace mp{
         }
     }
     
-    void GameState::Draw(float dt)
+    void GameState::draw(float dt)
     {
         this->_data->window.clear( sf::Color(55,55,55) );
         this->_data->window.draw(_background);

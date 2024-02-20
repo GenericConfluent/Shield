@@ -43,13 +43,13 @@ namespace mp {
     public:
         GameState(GameDataRef data);
         
-        void Init();
+        void init();
         
         void reInit();
         
-        void HandleInput();
-        void Update(float dt);
-        void Draw(float dt);
+        void handle_input();
+        void update(float dt);
+        void draw(float dt);
         
     private:
         

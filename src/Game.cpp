@@ -1,15 +1,6 @@
-//
-//  Game.cpp
-//  Simple game
-//
-//  Created by M Power on 2019-05-06.
-//  Copyright © 2019 M Power. All rights reserved.
-//
-
 #include "Game.hpp"
 #include <SFML/Audio.hpp>
 #include "SplashState.hpp"
-#include "ResourcePath.hpp"
 #include "GameState.hpp"
 
 namespace mp {
@@ -17,8 +8,8 @@ namespace mp {
         _data->window.create(sf::VideoMode::getDesktopMode(), title, sf::Style::Fullscreen);
         _data->machine.AddState(StateRef(new SplashState(this->_data)));
         _data->window.setMouseCursorVisible(false);
-        _data->assets.LoadTexture("Cursor", "assets/Images/Cursor.png");
-        _data->cursor.setTexture(this->_data->assets.GetTexture("Cursor"));
+        _data->assets.load<sf::Texture>("Cursor", "assets/Images/Cursor.png");
+        _data->cursor.setTexture(this->_data->assets.get<sf::Texture>("Cursor"));
         _data->cursor.setOrigin(_data->cursor.getLocalBounds().width/2, _data->cursor.getLocalBounds().height/2);
     }
     
@@ -48,14 +39,14 @@ namespace mp {
             accumulator += frameTime;
             
             while (accumulator >= dt) {
-                this->_data->machine.GetActiveState()->HandleInput();
-                this->_data->machine.GetActiveState()->Update(dt);
+                this->_data->machine.GetActiveState()->handle_input();
+                this->_data->machine.GetActiveState()->update(dt);
                 
                 accumulator -= dt;
             }
             
             interpolation = accumulator / dt;
-            this->_data->machine.GetActiveState()->Draw(interpolation);
+            this->_data->machine.GetActiveState()->draw(interpolation);
             
         }
     }

@@ -12,7 +12,7 @@
 namespace mp {
     Explosion::Explosion(GameDataRef data) : _data(data){
         _visible = sf::IntRect(0,0,512,512);
-        _spriteSheet.setTexture(_data->assets.GetTexture("Explosion"));
+        _spriteSheet.setTexture(_data->assets.get<sf::Texture>("Explosion"));
         _spriteSheet.setTextureRect(_visible);
         _spriteSheet.setOrigin(_spriteSheet.getLocalBounds().width/2, _spriteSheet.getLocalBounds().height/2);
     }
@@ -35,11 +35,10 @@ namespace mp {
     }
     
     Explosion& Explosion::operator= (const Explosion &explosion){
-        
         _data = explosion._data;
         _visible = explosion._visible;
         _done = explosion._done;
-        _spriteSheet.setTexture(_data->assets.GetTexture("Explosion"));
+        _spriteSheet.setTexture(_data->assets.get<sf::Texture>("Explosion"));
         _spriteSheet.setTextureRect(_visible);
         
         // return the existing object so we can chain this operator

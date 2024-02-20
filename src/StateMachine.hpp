@@ -16,24 +16,20 @@
 namespace mp {
     typedef std::unique_ptr<State> StateRef;
     
-    class StateMachine
-    {
+    class StateMachine {
     public:
-        StateMachine() { }
-        ~StateMachine() { }
+        StateMachine() {}
+        ~StateMachine() {}
         
         void AddState(StateRef newState, bool isReplacing = true);
         void RemoveState();
         // Run at start of each loop in Game.cpp
         void ProcessStateChanges();
-        
         StateRef &GetActiveState();
         
     private:
-        std::stack<StateRef> _states;
-        StateRef _newState;
-        
-        bool _isRemoving;
-        bool _isAdding, _isReplacing;
+        std::stack<StateRef> states;
+        StateRef new_state;
+        bool is_removing, is_adding, is_replacing;
     };
 }
