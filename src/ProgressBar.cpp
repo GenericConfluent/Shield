@@ -1,15 +1,7 @@
-//
-//  ProgressBar.cpp
-//  Shield
-//
-//  Created by M Power on 2019-06-25.
-//  Copyright © 2019 M Power. All rights reserved.
-//
-
 #include "ProgressBar.hpp"
 #include <format>
 
-namespace mp {
+namespace shield {
     ProgressBar::ProgressBar(GameDataRef data) : _data(data) {
         _bar.setTexture(_data->assets.get<sf::Texture>("Bar:100"));
         _bar.setPosition(10.0, 10.0);
@@ -36,3 +28,4 @@ namespace mp {
         _data->window.draw(_bar);
     }
 }
+

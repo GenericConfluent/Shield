@@ -1,17 +1,9 @@
-//
-//  ProgressBar.hpp
-//  Shield
-//
-//  Created by M Power on 2019-06-25.
-//  Copyright © 2019 M Power. All rights reserved.
-//
-
 #pragma once
 #include "Game.hpp"
 #include <SFML/Graphics.hpp>
 
-namespace mp {
-    class ProgressBar{
+namespace shield {
+    class ProgressBar {
     public:
         ProgressBar(GameDataRef data);
         
@@ -21,8 +13,7 @@ namespace mp {
         
     private:
         GameDataRef _data;
-        
         sf::Sprite _bar;
     };
-
 }
+

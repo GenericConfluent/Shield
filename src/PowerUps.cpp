@@ -1,18 +1,9 @@
-//
-//  PowerUps.cpp
-//  Shield
-//
-//  Created by M Power on 2019-06-27.
-//  Copyright © 2019 M Power. All rights reserved.
-//
-
 #include <algorithm>
 #include <ctime>
-#include <iostream>
 #include "PowerUps.hpp"
 #include "Collision.hpp"
 
-namespace mp {
+namespace shield {
     const int PowerUp::TIMESTOP = 0;
     const int PowerUp::INFINITESHIELD = 1;
     const int PowerUp::BOMB = 2;
@@ -116,7 +107,6 @@ namespace mp {
     }
     
     void PowerUpManager::update(){
-        
         if(_buffSpawnClock.getElapsedTime().asSeconds() >= _buffSpawnFrequency){
             //random number engine
             std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded
@@ -168,14 +158,8 @@ namespace mp {
                 _currentBuffs.erase(_currentBuffs.begin()+i);
             }
         }
-        
-        
     }
-    
-    
-    
-    
-    
+
     void PowerUpManager::draw(){
         for (int i = 0; i < _onFieldPowerUps.size(); i++) {
             _data->window.draw(_onFieldPowerUps[i].second);
@@ -193,6 +177,5 @@ namespace mp {
     bool PowerUpManager::bomb(){
         return _bomb;
     }
-    
-    
 }
+

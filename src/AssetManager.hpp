@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <string>
 
-namespace mp {
+namespace shield {
     class AssetManager {
     public:
         template <typename Asset>

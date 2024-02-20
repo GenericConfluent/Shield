@@ -1,16 +1,8 @@
-//
-//  Explosion.hpp
-//  Shield
-//
-//  Created by M Power on 2019-06-26.
-//  Copyright © 2019 M Power. All rights reserved.
-//
-
 #pragma once
 #include "Game.hpp"
 #include <SFML/Graphics.hpp>
 
-namespace mp {
+namespace shield {
     class Explosion{
     public:
         Explosion(GameDataRef data);
@@ -24,6 +16,7 @@ namespace mp {
         Explosion& operator= (const Explosion &explosion);
         
         sf::Sprite _spriteSheet;
+
     private:
         bool _done = false;
         
@@ -32,7 +25,6 @@ namespace mp {
         const int _size = 512;
         sf::Texture texture;
         sf::IntRect _visible;
-        
     };
-    
 }
+

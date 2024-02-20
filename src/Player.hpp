@@ -1,12 +1,10 @@
 #pragma once
-
-#include <stdio.h>
 #include <SFML/Graphics.hpp>
 #include <utility>
 #include "Game.hpp"
 
-namespace mp {
-    class Player{
+namespace shield {
+    class Player {
     public:
         Player(GameDataRef data);
         ~Player();
@@ -28,7 +26,7 @@ namespace mp {
         float _playerSpeed = 3.0;
     };
     
-    class Ghost{
+    class Ghost {
     public:
         Ghost( GameDataRef data);
         void spawn(sf::Vector2f position);
@@ -36,12 +34,12 @@ namespace mp {
         void draw();
         
     private:
-        
         GameDataRef _data;
         sf::Clock _timer;
         std::vector<std::pair<sf::Sprite, float>> _ghosts;
         
-        const int _baselineFade = 200;// Must be divisible by the fadeing tick
+        const int _baselineFade = 200; // Must be divisible by the fadeing tick
         float fadingTick = 25;
     };
 }
+

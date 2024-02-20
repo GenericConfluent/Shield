@@ -1,8 +1,9 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
 
-namespace mp {
+// NOTE: I have no clue where I got this from.
+// TODO: Remove unnecessary collision fns.
+namespace shield {
     //////
     /// Test for a collision between two sprites by comparing the alpha values of overlapping pixels
     /// Supports scaling and rotation
@@ -37,3 +38,4 @@ namespace mp {
     //////
     bool BoundingBoxTest(const sf::Sprite& Object1, const sf::Sprite& Object2);
 }
+

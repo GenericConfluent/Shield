@@ -1,6 +1,6 @@
 #include "StateMachine.hpp"
 
-namespace mp {
+namespace shield {
     void StateMachine::AddState(StateRef newState, bool isReplacing) {
         this->is_adding = true;
         this->is_replacing = isReplacing;

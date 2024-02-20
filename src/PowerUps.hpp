@@ -1,20 +1,12 @@
-//
-//  PowerUps.hpp
-//  Shield
-//
-//  Created by M Power on 2019-06-27.
-//  Copyright © 2019 M Power. All rights reserved.
-//
-#include <stdio.h>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <utility>
 #include <random>
 #include "Game.hpp"
 
-
-namespace mp {
-    class PowerUp{
+namespace shield {
+    // TODO: Maybe change this to a namespace.
+    class PowerUp {
     public:
         const static int TIMESTOP;
         const static int INFINITESHIELD;
@@ -25,16 +17,15 @@ namespace mp {
     class PowerUpManager {
     public:
         PowerUpManager(GameDataRef data, sf::Sprite & player);
-        
-        
+
         void update();
         void draw();
         
         float getGameSpeed();
         bool infiniteShield();
         bool bomb();
+
     private:
-        
         float _slowMotion = 1.0;
         bool _infiniteShield = false;
         bool _bomb = false;
@@ -45,7 +36,7 @@ namespace mp {
         void f_ApplyBuffs();
         void f_RemoveBuffs(int buffType);
         
-        std::random_device rd;  //Will be used to obtain a seed for the random device
+        std::random_device rd;  // Will be used to obtain a seed for the random device
 
         GameDataRef _data;
         
@@ -57,3 +48,4 @@ namespace mp {
         std::vector<std::pair<int, sf::Clock>> _currentBuffs;
     };
 }
+

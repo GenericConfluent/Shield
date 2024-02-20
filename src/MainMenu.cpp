@@ -12,14 +12,10 @@
 #include <iostream>
 #include <cmath>
 
-namespace mp {
-    MainMenuState::MainMenuState(GameDataRef data) : _data(data)
-    {
-        
-    }
+namespace shield {
+    MainMenuState::MainMenuState(GameDataRef data) : _data(data) {}
     
-    void MainMenuState::init()
-    {
+    void MainMenuState::init() {
         // Load textures
         _data->assets.load<sf::Texture>("Background", "assets/Images/Background.png");
         _data->assets.load<sf::Texture>("MBackground", "assets/Images/MenuBackground.jpg");
@@ -150,8 +146,7 @@ namespace mp {
         }
     }
     
-    void MainMenuState::draw(float dt)
-    {
+    void MainMenuState::draw(float dt) {
         this->_data->window.clear( sf::Color(55,55,55) );
         
         this->_data->window.draw(background);
@@ -167,3 +162,4 @@ namespace mp {
         this->_data->window.display();
     }
 }
+

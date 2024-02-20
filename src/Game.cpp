@@ -3,7 +3,7 @@
 #include "SplashState.hpp"
 #include "GameState.hpp"
 
-namespace mp {
+namespace shield {
     Game::Game(std::string title) {
         _data->window.create(sf::VideoMode::getDesktopMode(), title, sf::Style::Fullscreen);
         _data->machine.AddState(StateRef(new SplashState(this->_data)));

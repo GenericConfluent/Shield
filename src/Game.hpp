@@ -1,20 +1,12 @@
-//
-//  Game.hpp
-//  Simple game
-//
-//  Created by M Power on 2019-05-06.
-//  Copyright © 2019 M Power. All rights reserved.
-//
 #pragma once
 
-#include <stdio.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "AssetManager.hpp"
 #include "StateMachine.hpp"
 #include "InputManager.hpp"
 
-namespace  mp{
+namespace shield {
     struct GameData{
         sf::RenderWindow window;
         sf::Sprite cursor;
@@ -33,9 +25,8 @@ namespace  mp{
     private:
         GameDataRef _data = std::make_shared<GameData>();
         
-        constexpr static float dt = 1.0f / 60.0f;// Update runs at 60 frames per second
+        constexpr static float dt = 1.0f / 60.0f; // 60 fps
         sf::Clock _clock;
-        
     };
 }
 

@@ -1,21 +1,8 @@
-//
-//  Enemy.cpp
-//  Simple game
-//
-//  Created by M Power on 2019-05-11.
-//  Copyright © 2019 M Power. All rights reserved.
-//
-
 #include "Enemy.hpp"
-#include "ResourcePath.hpp"
-#include <math.h>
-#include <cstdlib>
-#include <ctime>
 #include <cmath>
-#include <iostream>
 #include <random>
 
-namespace mp {
+namespace shield {
     Enemy::Enemy(GameDataRef data, sf::Vector2f position) : _data(data)
     {
         const int border = 50;
@@ -46,9 +33,7 @@ namespace mp {
         _enemyBody.setRotation(rotation);
     }
     
-    Enemy::~Enemy()
-    {
-    }
+    Enemy::~Enemy() {}
     
     void Enemy::draw()
     {
@@ -60,7 +45,5 @@ namespace mp {
         _enemyBody.move(speed*(-(cos(_enemyBody.getRotation()*3.14159265/180)*-1)), speed*(sin(_enemyBody.getRotation()*3.14159265/180)*1));
     }
     
-    bool Enemy::isDead(){
-        
-    }
+    bool Enemy::isDead(){}
 }

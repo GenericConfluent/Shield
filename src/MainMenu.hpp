@@ -1,19 +1,10 @@
-//
-//  MainMenu.hpp
-//  Simple game
-//
-//  Created by M Power on 2019-05-07.
-//  Copyright © 2019 M Power. All rights reserved.
-//
-
 #pragma once
 
-#include <stdio.h>
 #include <SFML/Graphics.hpp>
 #include "State.hpp"
 #include "Game.hpp"
 
-namespace mp {
+namespace shield {
     struct guiTransitionOut {
         sf::Vector2f titlePos;
         sf::Vector2f linePos;
@@ -43,8 +34,6 @@ namespace mp {
         sf::Text leaveheading;
         sf::RectangleShape leaveline;
         
-
-        
         sf::Sprite background;
         
         guiTransitionOut Out;
@@ -52,3 +41,4 @@ namespace mp {
         bool transition = false;
     };
 }
+

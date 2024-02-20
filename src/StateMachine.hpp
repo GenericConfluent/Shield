@@ -13,7 +13,7 @@
 #include <stack>
 #include "State.hpp"
 
-namespace mp {
+namespace shield {
     typedef std::unique_ptr<State> StateRef;
     
     class StateMachine {

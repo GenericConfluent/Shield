@@ -1,7 +1,7 @@
 #include "Game.hpp"
 
 int main() {
-    mp::Game game = mp::Game("Shield");
+    shield::Game game = shield::Game("Shield");
     game.run();
     return 0;
 }

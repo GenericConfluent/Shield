@@ -1,12 +1,4 @@
-//
-//  GameState.cpp
-//  Simple game
-//
-//  Created by M Power on 2019-05-08.
-//  Copyright © 2019 M Power. All rights reserved.
-//
 #include <iostream>
-#include <math.h>
 #include <iomanip>
 #include <sstream>
 #include <cstdlib>
@@ -17,10 +9,7 @@
 #include "MainMenu.hpp"
 #include "Collision.hpp"
 
-
-
-namespace mp{
-    
+namespace shield {
 //    std::vector<sf::Sprite> playerGhosts;
 //    sf::Clock ghostClock;
 //    std::vector<unsigned int> ghosttimerdelay;
@@ -174,7 +163,7 @@ namespace mp{
                 }
             }
 
-            for(int i = 0; i < _otherExplosions.size(); i++){
+            for(int i = 0; i < _otherExplosions.size(); i++) {
                 if (_otherExplosions[i].hasPlayed()) {
                     _otherExplosions.erase(_otherExplosions.begin()+i);
                 }
@@ -183,7 +172,7 @@ namespace mp{
 
             _powerUpManager->update();
         } else {
-            if(_boom->hasPlayed()){
+            if(_boom->hasPlayed()) {
                 this->_data->machine.AddState(StateRef(new MainMenuState(_data)), true);
                 _explosionSound.pause();
                 _data->backgroundMusic.setVolume(55);
@@ -192,15 +181,14 @@ namespace mp{
         }
     }
     
-    void GameState::draw(float dt)
-    {
+    void GameState::draw(float dt) {
         this->_data->window.clear( sf::Color(55,55,55) );
         this->_data->window.draw(_background);
         
     
         this->_data->window.draw(_scoreDisplay);
         //        this->_playerGhost->draw();
-        if(!_playBoom){
+        if(!_playBoom) {
             this->_player->draw();
             
             for (int i  = 0; i < _enemies.size(); i++) {
@@ -219,8 +207,8 @@ namespace mp{
             _data->window.draw(_boom->_spriteSheet);
         }
         
-        
         this->_data->window.draw(this->_data->cursor);
         this->_data->window.display();
     }
 }
+

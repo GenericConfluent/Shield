@@ -2,8 +2,7 @@
 #include <map>
 #include "Collision.hpp"
 
-namespace mp
-{
+namespace shield {
     class BitmaskManager
     {
     public:
@@ -85,8 +84,7 @@ namespace mp
         return false;
     }
     
-    bool CreateTextureAndBitmask(sf::Texture &LoadInto, const std::string& Filename)
-    {
+    bool CreateTextureAndBitmask(sf::Texture &LoadInto, const std::string& Filename) {
         sf::Image img;
         if (!img.loadFromFile(Filename))
             return false;
@@ -97,14 +95,12 @@ namespace mp
         return true;
     }
     
-    sf::Vector2f GetSpriteCenter (const sf::Sprite& Object)
-    {
+    sf::Vector2f GetSpriteCenter (const sf::Sprite& Object) {
         sf::FloatRect AABB = Object.getGlobalBounds();
         return sf::Vector2f (AABB.left+AABB.width/2.f, AABB.top+AABB.height/2.f);
     }
     
-    sf::Vector2f GetSpriteSize (const sf::Sprite& Object)
-    {
+    sf::Vector2f GetSpriteSize (const sf::Sprite& Object) {
         sf::IntRect OriginalSize = Object.getTextureRect();
         sf::Vector2f Scale = Object.getScale();
         return sf::Vector2f (OriginalSize.width*Scale.x, OriginalSize.height*Scale.y);
@@ -182,5 +178,6 @@ namespace mp
                 return false;
         }
         return true;
-        }
+    }
 }
+

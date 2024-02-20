@@ -1,14 +1,4 @@
-//
-//  SplashState.cpp
-//  Simple game
-//
-//  Created by M Power on 2019-05-07.
-//  Copyright © 2019 M Power. All rights reserved.
-//
-
 #include "SplashState.hpp"
-
-#include "ResourcePath.hpp"
 #include "MainMenu.hpp"
 #include <bits/utility.h>
 #include <cstring>
@@ -16,7 +6,7 @@
 #include <array>
 #include <format>
 
-namespace mp {
+namespace shield {
     SplashState::SplashState(GameDataRef data) : data (data) {}
     
     // Why not in the constructor? Is there a delay between when we make the object and
@@ -71,3 +61,4 @@ namespace mp {
         this->data->window.display();
     }
 }
+

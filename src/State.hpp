@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mp {
+namespace shield {
     class State{
     public:
         virtual void init() = 0;

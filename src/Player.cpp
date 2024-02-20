@@ -1,6 +1,6 @@
 #include "Player.hpp"
 
-namespace mp {
+namespace shield {
     Player::Player(GameDataRef data) : _data(data) {
         playerSprite.scale(0.2, 0.2);
     }
