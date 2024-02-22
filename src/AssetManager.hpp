@@ -17,8 +17,8 @@ namespace shield {
         }
 
         template <typename Asset>
-        const Asset& get(std::string id) {
-            return *std::static_pointer_cast<Asset>(this->store.at({typeid(Asset), id}));
+        std::shared_ptr<Asset> get(std::string id) {
+            return std::static_pointer_cast<Asset>(this->store.at({typeid(Asset), id}));
         }
     private:
         struct pair_hash {

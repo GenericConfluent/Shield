@@ -9,7 +9,7 @@ namespace shield {
         _data->machine.AddState(StateRef(new SplashState(this->_data)));
         _data->window.setMouseCursorVisible(false);
         _data->assets.load<sf::Texture>("Cursor", "assets/Images/Cursor.png");
-        _data->cursor.setTexture(this->_data->assets.get<sf::Texture>("Cursor"));
+        _data->cursor.setTexture(*this->_data->assets.get<sf::Texture>("Cursor"));
         _data->cursor.setOrigin(_data->cursor.getLocalBounds().width/2, _data->cursor.getLocalBounds().height/2);
     }
     
@@ -21,7 +21,7 @@ namespace shield {
         
         _data->backgroundMusic.openFromFile("assets/Audio/Music/Origin.wav");
         _data->backgroundMusic.play();
-        _data->backgroundMusic.setVolume(55);
+        _data->backgroundMusic.setVolume(0);
         _data->backgroundMusic.setLoop(true);
         
         // What's going on in this game loop?
@@ -47,7 +47,6 @@ namespace shield {
             
             interpolation = accumulator / dt;
             this->_data->machine.GetActiveState()->draw(interpolation);
-            
         }
     }
 }

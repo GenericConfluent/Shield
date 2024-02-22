@@ -116,7 +116,7 @@ namespace shield {
             switch (dis(gen)) {
                 case PowerUp::TIMESTOP:{
                     sf::Sprite sprite;
-                    sprite.setTexture(_data->assets.get<sf::Texture>("TimeStop"));
+                    sprite.setTexture(*_data->assets.get<sf::Texture>("TimeStop"));
                     sprite.scale(0.099, 0.099);
                     sprite.setPosition(f_GetRandomPositionOnWindow(_playerRef->getPosition()));
                     
@@ -126,7 +126,7 @@ namespace shield {
                     
                 case PowerUp::INFINITESHIELD:{
                     sf::Sprite sprite;
-                    sprite.setTexture(_data->assets.get<sf::Texture>("UnlimShield"));
+                    sprite.setTexture(*_data->assets.get<sf::Texture>("UnlimShield"));
                     sprite.scale(0.099, 0.099);
                     sprite.setPosition(f_GetRandomPositionOnWindow(_playerRef->getPosition()));
                     
@@ -136,7 +136,7 @@ namespace shield {
                     
                 case PowerUp::BOMB:{
                     sf::Sprite sprite;
-                    sprite.setTexture(_data->assets.get<sf::Texture>("BOMB"));
+                    sprite.setTexture(*_data->assets.get<sf::Texture>("BOMB"));
                     sprite.scale(0.099, 0.099);
                     sprite.setPosition(f_GetRandomPositionOnWindow(_playerRef->getPosition()));
                     

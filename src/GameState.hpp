@@ -6,6 +6,7 @@
 #include <list>
 #include <iterator>
 #include <utility>
+#include <optional>
 #include "State.hpp"
 #include "Game.hpp"
 #include "Player.hpp"
@@ -25,6 +26,7 @@ namespace shield {
     class GameState : public State {
     public:
         GameState(GameDataRef data);
+        ~GameState();
         
         void init();
         
@@ -42,8 +44,8 @@ namespace shield {
         sf::Music _bgmusic;
         sf::Sprite _background;
         
-        Player *_player;
-        Ghost *_playerGhost;
+        std::optional<std::unique_ptr<Player>> _player;
+        //Ghost *_playerGhost;
         
         float _waitTime = 1.0;
         sf::Clock _spawnClock;
@@ -59,11 +61,11 @@ namespace shield {
         
         std::vector<Enemy> _enemies;
         
-        Explosion *_boom;
+        Explosions *_boom;
         bool _playBoom = false;
         sf::Sound _explosionSound;
         
-        std::vector<Explosion> _otherExplosions;
+        Explosions explosions;
         
         PowerUpManager *_powerUpManager;
     };

@@ -1,29 +1,25 @@
 #pragma once
 #include "Game.hpp"
+#include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics.hpp>
 
 namespace shield {
-    class Explosion{
+    class Explosions : public sf::Sprite {
     public:
-        Explosion(GameDataRef data);
+        Explosions(GameDataRef data);
         
         void reset();
         void tick();
         
-        void setPosition(sf::Vector2f position);
         bool hasPlayed();
         
-        Explosion& operator= (const Explosion &explosion);
-        
-        sf::Sprite _spriteSheet;
-
+        Explosions& operator= (const Explosions &explosion);
+        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+        std::vector<sf::Vector2f> inner = {};
     private:
-        bool _done = false;
-        
-        GameDataRef _data;
-        
+
         const int _size = 512;
-        sf::Texture texture;
+        std::shared_ptr<sf::Texture> texture;
         sf::IntRect _visible;
     };
 }

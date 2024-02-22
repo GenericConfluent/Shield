@@ -3,7 +3,7 @@
 
 namespace shield {
     ProgressBar::ProgressBar(GameDataRef data) : _data(data) {
-        _bar.setTexture(_data->assets.get<sf::Texture>("Bar:100"));
+        _bar.setTexture(*_data->assets.get<sf::Texture>("Bar:100"));
         _bar.setPosition(10.0, 10.0);
         _bar.setScale(0.8, 0.8);
     }
@@ -21,7 +21,7 @@ namespace shield {
         } else {
             return;
         }
-        _bar.setTexture(_data->assets.get<sf::Texture>(id));
+        _bar.setTexture(*_data->assets.get<sf::Texture>(id));
     }
     
     void ProgressBar::draw(){

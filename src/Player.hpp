@@ -13,17 +13,15 @@ namespace shield {
         void update();
         float getSpeed();
         void attack();
-        void hit(float damage);
+        void kill();
         bool isDead();
         sf::Sprite playerSprite;
         char state;
-        float s_yvel;
-        float s_jumpheight = 13;
         
     private:
         GameDataRef _data;
-        
-        float _playerSpeed = 3.0;
+        float _playerSpeed = 9.0;
+        bool dead = false;
     };
     
     class Ghost {

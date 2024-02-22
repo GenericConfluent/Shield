@@ -31,7 +31,7 @@ namespace shield {
         this->data->assets.load<sf::Texture>("UnlimShield", "assets/Images/UnlimShield.png");
         this->data->assets.load<sf::Texture>("BOMB", "assets/Images/bomb.png");
         
-        background.setTexture(this->data->assets.get<sf::Texture>("SplashState:Logo"));
+        background.setTexture(*this->data->assets.get<sf::Texture>("SplashState:Logo"));
         
         sf::Vector2f windowSize(this->data->window.getSize());
         background.setOrigin(background.getLocalBounds().width/2,background.getLocalBounds().height/2);

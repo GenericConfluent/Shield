@@ -6,7 +6,7 @@ namespace shield {
     Enemy::Enemy(GameDataRef data, sf::Vector2f position) : _data(data)
     {
         const int border = 50;
-        _enemyBody.setTexture(_data->assets.get<sf::Texture>("Enemy"));
+        _enemyBody.setTexture(*_data->assets.get<sf::Texture>("Enemy"));
         _enemyBody.scale(0.15, 0.15);
         _enemyBody.setOrigin(_enemyBody.getLocalBounds().width/2, _enemyBody.getLocalBounds().height/2);
         

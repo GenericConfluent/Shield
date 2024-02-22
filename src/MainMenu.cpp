@@ -20,16 +20,16 @@ namespace shield {
         // Set up the GUI
         sf::Vector2f lineSize(float(_data->window.getSize().x)/2.895, 5.0);
         
-        title.setFont(_data->assets.get<sf::Font>("SpaceAge"));
+        title.setFont(*_data->assets.get<sf::Font>("SpaceAge"));
         title.setString("Shield");
         title.setCharacterSize(150);
-        title.setPosition((_data->window.getSize().x/2) - title.getLocalBounds().width/2, 10.0);
+        title.setPosition((_data->window.getSize().x / 2.0) - title.getLocalBounds().width / 2.0, 10.0);
         
         line.setSize(lineSize);
         line.setPosition(0.0, _data->window.getSize().y/1.5);
         line.setFillColor(sf::Color(255,255,255));
         
-        heading.setFont(_data->assets.get<sf::Font>("Orbiter"));
+        heading.setFont(*_data->assets.get<sf::Font>("Orbiter"));
         heading.setString("Play Game(G)");
         heading.setCharacterSize(50);
         heading.setOrigin(heading.getLocalBounds().width, 0.0);
@@ -39,7 +39,7 @@ namespace shield {
         aboutline.setPosition(0.0, line.getPosition().y+100);
         aboutline.setFillColor(sf::Color(255,255,255));
         
-        aboutheading.setFont(_data->assets.get<sf::Font>("Orbiter"));
+        aboutheading.setFont(*_data->assets.get<sf::Font>("Orbiter"));
         aboutheading.setString("Information(A)");
         aboutheading.setCharacterSize(50);
         aboutheading.setOrigin(aboutheading.getLocalBounds().width, 0.0);
@@ -49,18 +49,18 @@ namespace shield {
         leaveline.setPosition(0.0, aboutline.getPosition().y+100);
         leaveline.setFillColor(sf::Color(255,255,255));
         
-        leaveheading.setFont(_data->assets.get<sf::Font>("Orbiter"));
+        leaveheading.setFont(*_data->assets.get<sf::Font>("Orbiter"));
         leaveheading.setString("Leave App(Esc)");
         leaveheading.setCharacterSize(50);
         leaveheading.setOrigin(aboutheading.getLocalBounds().width, 0.0);
         leaveheading.setPosition(leaveline.getPosition().x + leaveline.getLocalBounds().width, leaveline.getPosition().y - 55);
         
-        background.setTexture(_data->assets.get<sf::Texture>("MBackground"));
+        background.setTexture(*_data->assets.get<sf::Texture>("MBackground"));
         background.setScale(0.55, 0.55);
         background.setOrigin(background.getLocalBounds().width/2, background.getLocalBounds().height/2);
-        background.setPosition(_data->window.getSize().x/2, _data->window.getSize().y/2);
+        background.setPosition(_data->window.getSize().x / 2.0, _data->window.getSize().y / 2.0);
         
-        Out.titlePos = sf::Vector2f((_data->window.getSize().x/2) - title.getLocalBounds().width/2, -500);
+        Out.titlePos = sf::Vector2f((_data->window.getSize().x / 2.0) - title.getLocalBounds().width / 2.0, -500);
         Out.linePos = sf::Vector2f(-(line.getLocalBounds().width) - 20, _data->window.getSize().y/1.5);
     }
     

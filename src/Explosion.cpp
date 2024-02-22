@@ -1,19 +1,18 @@
 #include "Explosion.hpp"
+#include "SFML/Graphics/Transformable.hpp"
+#include <iostream>
 
 namespace shield {
-    Explosion::Explosion(GameDataRef data) : _data(data) {
+    Explosions::Explosions(GameDataRef data) {
         _visible = sf::IntRect(0,0,512,512);
-        _spriteSheet.setTexture(_data->assets.get<sf::Texture>("Explosion"));
-        _spriteSheet.setTextureRect(_visible);
-        _spriteSheet.setOrigin(_spriteSheet.getLocalBounds().width/2, _spriteSheet.getLocalBounds().height/2);
+        texture = data->assets.get<sf::Texture>("Explosion");
+        setTexture(*texture);
+        setTextureRect(_visible);
+        setOrigin(getLocalBounds().width / 2.0, getLocalBounds().height / 2.0);
     }
     
-    void Explosion::tick() {
-        if(_visible.left + _visible.width == 4096 && _visible.top + _visible.height == 4096){
-            _done = true;
-        }
-        
-        if(!_done){
+    void Explosions::tick() {
+        if(!hasPlayed()){
             if(_visible.left + _visible.width == 4096){
                 _visible.left = 0;
                 _visible.top += 512;
@@ -22,31 +21,33 @@ namespace shield {
             }
         }
         
-        _spriteSheet.setTextureRect(_visible);
+        setTextureRect(_visible);
     }
     
-    Explosion& Explosion::operator= (const Explosion &explosion) {
-        _data = explosion._data;
+    Explosions& Explosions::operator= (const Explosions &explosion) {
+        texture = explosion.texture;
         _visible = explosion._visible;
-        _done = explosion._done;
-        _spriteSheet.setTexture(_data->assets.get<sf::Texture>("Explosion"));
-        _spriteSheet.setTextureRect(_visible);
+        setTexture(*texture);
+        setTextureRect(_visible);
         
-        // return the existing object so we can chain this operator
         return *this;
     }
     
-    void Explosion::setPosition(sf::Vector2f position) {
-//        _spriteSheet.setPosition(position.x - (_size/2), position.y - (_size/2));
-        _spriteSheet.setPosition(position);
+    inline bool Explosions::hasPlayed() {
+        return _visible.left + _visible.width == 4096 && _visible.top + _visible.height == 4096;
     }
     
-    bool Explosion::hasPlayed() {
-        return _done;
-    }
-    
-    void Explosion::reset() {
+    void Explosions::reset() {
         _visible = sf::IntRect(0,0,512,512);
-        _spriteSheet.setTextureRect(_visible);
+        setTextureRect(_visible);
+    }
+
+    void Explosions::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+        sf::Transformable tf;
+        for (const sf::Vector2f& position : inner) {
+            tf.setPosition(position);
+            states.transform = tf.getTransform();
+            target.draw(static_cast<sf::Sprite>(*this), states);
+        }
     }
 }

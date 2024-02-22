@@ -19,18 +19,20 @@ namespace shield {
     
     void Player::attack() {}
     
-    void Player::hit(float damage){
-//        this->_health -= damage;
+    void Player::kill(){
+        dead = true;
     }
     
-    bool Player::isDead() {}
+    bool Player::isDead() {
+        return dead;
+    }
     
     Ghost::Ghost(GameDataRef data) : _data(data) {}
     
     void Ghost::spawn(sf::Vector2f position) {
         sf::Sprite newSprite;
         newSprite.scale(0.2, 0.2);
-        newSprite.setTexture(_data->assets.get<sf::Texture>("Player"));
+        newSprite.setTexture(*_data->assets.get<sf::Texture>("Player"));
         newSprite.setColor(sf::Color(200,200,200, _baselineFade));
         newSprite.setPosition(position.x, position.y);
         _ghosts.push_back(std::make_pair(newSprite, 0.0));
