@@ -9,23 +9,9 @@
 namespace shield {
     SplashState::SplashState(GameDataRef data) : data (data) {}
     
-    // Why not in the constructor? Is there a delay between when we make the object and
-    // initialize it?
     void SplashState::init(){
         this->data->assets.load<sf::Texture>("SplashState:Logo", "assets/Images/logo.png");
 
-        // NOTE: Formatting could potentially be sped up with constexpr func.
-        constexpr auto PB_PATH = "assets/Images/ProgressBar/Bar-{}.png";
-        std::string name, file_path;
-        name.reserve(7);
-        file_path.reserve(strlen(PB_PATH));
-        for (std::size_t i = 0; i <= 100; i += 5) {
-            name = std::format("Bar:{}", i);
-            file_path = std::format(PB_PATH, i);
-            this->data->assets.load<sf::Texture>(name, file_path);
-        }
-
-        this->data->assets.load<sf::Texture>("Bar:POWER", "assets/Images/ProgressBar/Bar-Eter.png");
         this->data->assets.load<sf::Texture>("Explosion", "assets/Images/explosion.png");
         this->data->assets.load<sf::Texture>("TimeStop", "assets/Images/TimeStop.png");
         this->data->assets.load<sf::Texture>("UnlimShield", "assets/Images/UnlimShield.png");

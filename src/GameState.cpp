@@ -9,6 +9,7 @@
 #include "GameState.hpp"
 #include "MainMenu.hpp"
 #include "Collision.hpp"
+#include "ProgressBar.hpp"
 #include "SFML/System/Vector2.hpp"
 
 namespace shield {
@@ -44,10 +45,7 @@ namespace shield {
         _scoreDisplay.setPosition(_data->window.getSize().x/2.0, _data->window.getSize().y/2.0);
         
         _energyBar = new ProgressBar(_data);
-        
-        _boom = new Explosions(_data);
-        _boom->reset();
-        _playBoom = false;
+        _energyBar->setPosition(ProgressBar::WIDTH * 0.5 + 10.0, ProgressBar::RADIUS + 10.0);
         
         sf::SoundBuffer buffer;
         buffer.loadFromFile("assets/Audio/Sounds/boom.wav");
@@ -204,7 +202,7 @@ namespace shield {
             _data->window.draw(explosions);
             
             _powerUpManager->draw();
-            _energyBar->draw();
+            _data->window.draw(*_energyBar);
         } else {
             _data->window.draw(explosions);
         }

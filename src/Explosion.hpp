@@ -14,9 +14,10 @@ namespace shield {
         bool hasPlayed();
         
         Explosions& operator= (const Explosions &explosion);
-        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
         std::vector<sf::Vector2f> inner = {};
+
     private:
+        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
         const int _size = 512;
         std::shared_ptr<sf::Texture> texture;

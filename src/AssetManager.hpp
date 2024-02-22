@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <typeindex>
 #include <unordered_map>
 #include <string>
@@ -9,11 +10,13 @@ namespace shield {
     class AssetManager {
     public:
         template <typename Asset>
-        void load(std::string id, std::string file_name) {
+        std::optional<Asset> load(std::string id, std::string file_name) {
             Asset asset;
             if (asset.loadFromFile(file_name)) {
                 this->store[{typeid(Asset), id}] = std::make_shared<Asset>(std::move(asset));
+                return {asset};
             }
+            return {};
         }
 
         template <typename Asset>

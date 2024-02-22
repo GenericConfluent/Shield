@@ -1,5 +1,4 @@
 #include "Explosion.hpp"
-#include "SFML/Graphics/Transformable.hpp"
 #include <iostream>
 
 namespace shield {

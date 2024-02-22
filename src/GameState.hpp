@@ -61,12 +61,8 @@ namespace shield {
         
         std::vector<Enemy> _enemies;
         
-        Explosions *_boom;
-        bool _playBoom = false;
         sf::Sound _explosionSound;
-        
         Explosions explosions;
-        
         PowerUpManager *_powerUpManager;
     };
 }
