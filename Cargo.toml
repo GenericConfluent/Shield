@@ -3,16 +3,64 @@ name = "shield"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies.bevy]
+version = "0.15.2"
+default-features = false
+features = [
+    "dynamic_linking", 
+    "animation", 
+    "bevy_asset", 
+    "bevy_audio", 
+    "bevy_color", 
+    "bevy_core_pipeline",
+    "bevy_gizmos",
+    "bevy_picking",
+    "bevy_render",
+    "bevy_sprite",
+    "bevy_state",
+    "bevy_text",
+    "bevy_ui",
+    "bevy_ui_picking_backend",
+    "bevy_window",
+    "bevy_winit",
+    "custom_cursor",
+    "wayland",
+    "png",
+    "jpeg",
+    "webgpu",
+]
+
 
 [dependencies]
-bevy = {version = "0.11.3", features = ["dynamic_linking"]}
-bevy_rapier2d = "0.22.0"
+avian2d = "0.2.1"
 rand = "0.8.5"
+
+# Cut down on the logs
+log = { version = "*", features = ["max_level_debug", "release_max_level_warn"] }
 
 [profile.dev]
 opt-level = 1
 
 [profile.dev.package."*"]
 opt-level = 3
+
+
+# Enable more optimization in the release profile at the cost of compile time.
+[profile.release]
+# Compile the entire crate as one unit.
+# Slows compile times, marginal improvements.
+codegen-units = 1
+# Do a second optimization pass over the entire program, including dependencies.
+# Slows compile times, marginal improvements.
+lto = "thin"
+
+# Optimize for size in the wasm-release profile to reduce load times and bandwidth usage on web.
+[profile.wasm-release]
+# Default to release profile values.
+inherits = "release"
+# Optimize with size in mind (also try "z", sometimes it is better).
+# Slightly slows compile times, great improvements to file size and runtime performance.
+opt-level = "s"
+# Strip all debugging information from the binary to slightly reduce file size.
+strip = "debuginfo"
 
