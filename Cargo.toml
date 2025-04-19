@@ -4,11 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies.bevy]
-version = "0.15.2"
+version = "0.15.3"
 default-features = false
 features = [
     "dynamic_linking", 
-    "animation", 
     "bevy_asset", 
     "bevy_audio", 
     "bevy_color", 
@@ -30,9 +29,19 @@ features = [
     "webgpu",
 ]
 
+[dependencies.avian2d]
+version = "0.2.1"
+default-features = false
+features = [
+    "2d",
+    "f32",
+    "debug-plugin",
+    "default-collider",
+    "parry-f32",
+    "simd"
+]
 
 [dependencies]
-avian2d = "0.2.1"
 rand = "0.8.5"
 
 # Cut down on the logs
@@ -63,4 +72,3 @@ inherits = "release"
 opt-level = "s"
 # Strip all debugging information from the binary to slightly reduce file size.
 strip = "debuginfo"
-

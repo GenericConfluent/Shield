@@ -37,13 +37,13 @@ struct Enemy;
 #[derive(Component)]
 struct Explosion;
 
-#[derive(Event)]
+#[derive(Event, Debug)]
 struct PowerUpEvent(PowerUp);
 
 #[derive(Event)]
 struct ExplosionEvent(Vec<Entity>);
 
-#[derive(Component, Clone, Copy)]
+#[derive(Component, Clone, Copy, Debug)]
 enum PowerUp {
     TimeSlow,
     ShieldBoost,
@@ -72,15 +72,18 @@ enum GameLayer {
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(
-            PhysicsPlugins::default().set(PhysicsInterpolationPlugin::interpolate_all()),
+            PhysicsPlugins::default()
+                .with_length_unit(100.0)
+                .set(PhysicsInterpolationPlugin::interpolate_all()),
         )
+        .insert_resource(Gravity(Vec2::ZERO))
         .add_event::<ExplosionEvent>()
         .add_event::<PowerUpEvent>()
         .add_systems(OnEnter(GameState::Game), game_setup)
         .add_systems(
             Update,
             (
-                spawn_enemy,
+                // spawn_enemy,
                 check_collisions,
                 player_control,
                 display_time,
@@ -134,18 +137,29 @@ fn game_setup(mut commands: Commands, asset_server: Res<AssetServer>, time: Res<
             ));
         });
 
-    commands
-        .spawn((
-            EntityBundle {
-                sprite: Sprite::from_image(asset_server.load("player.png")),
-                rigid_body: RigidBody::Dynamic,
-                transform: Transform::from_xyz(0., 0., 1.),
-                collider: Collider::circle(20.),
-            },
-            CollisionLayers::new(GameLayer::Default, CollisionLayers::ALL_FILTERS.filters),
-        ))
-        .insert(Sensor)
-        .insert(Player);
+    let mut sprite = Sprite::from_image(asset_server.load("player.png"));
+    sprite.custom_size = Some(Vec2::new(20.0, 20.0));
+    commands.spawn((
+        EntityBundle {
+            sprite,
+            rigid_body: RigidBody::Kinematic,
+            transform: Transform::from_xyz(0., 0., 1.),
+            collider: Collider::circle(20.),
+        },
+        CollisionLayers::new(GameLayer::Default, CollisionLayers::ALL_FILTERS.filters),
+        Mass(2.0),
+        LinearVelocity(Vec2::ZERO),
+        AngularInertia(2.0),
+        AngularDamping(2.0),
+        MaxLinearSpeed(800.0),
+        MaxAngularSpeed(200.0),
+        ExternalForce::ZERO,
+        ExternalTorque::ZERO,
+        TransformInterpolation,
+        SleepingDisabled,
+        Sensor,
+        Player,
+    ));
 }
 
 fn game_cleanup(
@@ -234,21 +248,63 @@ impl AxisInput for ButtonInput<KeyCode> {
 }
 
 fn player_control(
-    mut commands: Commands,
-    mut player_query: Query<(Entity, &Transform), With<Player>>,
+    mut player_query: Query<
+        (&mut LinearVelocity, &mut AngularVelocity, &mut Transform),
+        With<Player>,
+    >,
+    camera: Query<&OrthographicProjection, With<Camera>>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
 ) {
-    if let Some((player_entity, player_transform)) = player_query.iter_mut().next() {
-        let mut player_commands = commands.entity(player_entity);
-        if keyboard_input.any_pressed([KeyCode::KeyA, KeyCode::KeyD]) {
-            let torque = keyboard_input.axis(KeyCode::KeyA, KeyCode::KeyD) / 3.;
-            player_commands.insert(ExternalTorque::new(torque).with_persistence(false));
+    if let Ok((mut linear_velocity, mut angular_velocity, mut player_transform)) =
+        player_query.get_single_mut()
+    {
+        // I may want to dampen
+        // linear_velocity.0 = Vec2::ZERO;
+        // angular_velocity.0 = 0.0;
+
+        let rotation_speed = 3.0;
+        if keyboard_input.pressed(KeyCode::KeyA) {
+            angular_velocity.0 = rotation_speed;
+        }
+        if keyboard_input.pressed(KeyCode::KeyD) {
+            angular_velocity.0 = -rotation_speed;
         }
 
         if keyboard_input.pressed(KeyCode::KeyW) {
-            let force = player_transform.rotation.mul_vec3(Vec3::X).xy() * 80.;
-            player_commands.insert(ExternalForce::new(force).with_persistence(false));
+            let direction = player_transform.rotation.mul_vec3(Vec3::X).xy();
+            linear_velocity.0 = direction * 200.0; // Adjust speed as needed
         }
+
+        let Ok(projection) = camera.get_single() else {
+            warn_once!("Failed to get camera projection for wrap");
+            return;
+        };
+
+        let bounds = projection.area;
+        const BUFFER: f32 = 0.5;
+
+        wrap_value(
+            &mut player_transform.translation.x,
+            bounds.min.x,
+            bounds.max.x,
+            BUFFER,
+        );
+        wrap_value(
+            &mut player_transform.translation.y,
+            bounds.min.y,
+            bounds.max.y,
+            BUFFER,
+        );
+    }
+}
+
+fn wrap_value(pos: &mut f32, min: f32, max: f32, buffer: f32) {
+    let width = max - min;
+
+    if *pos < min - buffer {
+        *pos += width + buffer;
+    } else if *pos > max + buffer {
+        *pos -= width + buffer;
     }
 }
 
@@ -353,6 +409,7 @@ fn handle_powerup(
 
     const SLOWDOWN_TIME_S: f32 = 10.;
     for event in powerup_events.read() {
+        dbg!(event);
         match event {
             _ => {
                 if let Some(timer) = effect_time_left.as_mut() {
@@ -424,14 +481,17 @@ fn spawn_enemy(
             let mut sprite = Sprite::from_image(asset_server.load("enemy.png"));
             sprite.custom_size = Some(Vec2 { x: 20., y: 20. });
 
-            commands
-                .spawn(EntityBundle {
+            commands.spawn((
+                EntityBundle {
                     sprite,
                     rigid_body: RigidBody::Dynamic,
                     transform: Transform::from_xyz(x, y, 1.),
                     collider: Collider::circle(20.),
-                })
-                .insert(Enemy);
+                },
+                CollisionLayers::new(GameLayer::Enemy, GameLayer::Default),
+                LinearVelocity(velocity),
+                Enemy,
+            ));
         }
     }
 }

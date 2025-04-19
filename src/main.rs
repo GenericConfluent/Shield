@@ -1,5 +1,4 @@
 #![allow(clippy::complexity)]
-use avian2d::prelude::*;
 use bevy::math::Vec3Swizzles;
 use bevy::prelude::*;
 use rand::Rng;
@@ -11,6 +10,7 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .init_state::<GameState>()
+        .enable_state_scoped_entities::<GameState>()
         .add_plugins(game::GamePlugin)
         .add_plugins(menu::MenuPlugin)
         .add_systems(Startup, setup)
@@ -57,7 +57,7 @@ fn resize_background(
         }
 
         if background_iter.next().is_some() {
-            eprintln!("WARNING: There are multiple backgrounds spawned in currently");
+            warn_once!("There are multiple backgrounds spawned in currently");
         }
     }
 }

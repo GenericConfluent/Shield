@@ -5,8 +5,8 @@ pub struct MenuPlugin;
 
 impl Plugin for MenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::Menu), menu_setup);
-        app.add_systems(Update, check_selection.run_if(in_state(GameState::Menu)));
+        app.add_systems(OnEnter(GameState::Menu), menu_setup)
+            .add_systems(Update, check_selection.run_if(in_state(GameState::Menu)));
     }
 }
 
@@ -28,42 +28,42 @@ fn check_selection(
 }
 
 fn menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands
-        .spawn(Sprite::from_image(asset_server.load("menuback.png")))
-        .insert(Background);
+    commands.spawn((
+        Sprite::from_image(asset_server.load("menuback.png")),
+        Background,
+        StateScoped(GameState::Menu),
+    ));
 
     commands
-        .spawn(Node {
-            width: Val::Percent(100.),
-            height: Val::Percent(100.),
-            justify_content: JustifyContent::Center,
-            flex_direction: FlexDirection::Column,
-            ..default()
-        })
+        .spawn((
+            Node {
+                width: Val::Percent(100.),
+                height: Val::Percent(100.),
+                justify_content: JustifyContent::Center,
+                flex_direction: FlexDirection::Column,
+                ..default()
+            },
+            StateScoped(GameState::Menu),
+        ))
         .with_children(|parent| {
-            parent.spawn((
-                Text::new("SHIELD"),
-                TextFont {
-                    font: asset_server.load("fonts/SpaceAge.ttf"),
-                    font_size: 50.,
-                    ..default()
-                },
-                TextColor(Color::WHITE),
-                TextLayout::new_with_justify(JustifyText::Center),
-                Node {
-                    position_type: PositionType::Relative,
-                    top: Val::Px(40.),
-                    ..default()
-                },
-            ));
-
             parent
                 .spawn(Node {
                     display: Display::Flex,
                     flex_direction: FlexDirection::Column,
+                    row_gap: Val::Px(20.0),
+                    left: Val::Px(100.0),
                     ..default()
                 })
                 .with_children(|parent| {
+                    parent.spawn((
+                        Text::new("SHIELD"),
+                        TextFont {
+                            font: asset_server.load("fonts/SpaceAge.ttf"),
+                            font_size: 50.,
+                            ..default()
+                        },
+                        TextColor(Color::WHITE),
+                    ));
                     for opt in ["Play(P)", "Help(H)", "Quit(Q)"] {
                         parent.spawn((
                             Text::new(opt),
