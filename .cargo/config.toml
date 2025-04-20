@@ -6,3 +6,5 @@ rustflags = [
     "-Zshare-generics=y",
 ]
 
+[target.wasm32-unknown-unknown]
+runner = "wasm-server-runner"
