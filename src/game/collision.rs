@@ -1,4 +1,4 @@
-use super::*;
+use super::{enemy::Enemy, *};
 use avian2d::prelude::*;
 use bevy::prelude::*;
 
@@ -43,9 +43,9 @@ pub fn item_player_collision(
 
 pub fn enemy_player_collision(
     mut collision_event: EventReader<Collision>,
-    mut enemy_player_collision: EventWriter<EnemyPlayerCollision>,
+    mut commands: Commands,
     player: Query<Entity, With<Player>>,
-    enemies: Query<Entity, Without<Player>>,
+    enemies: Query<&Enemy, Without<Player>>,
 ) {
     let Ok(player) = player.get_single() else {
         return;
@@ -57,7 +57,8 @@ pub fn enemy_player_collision(
         };
 
         if enemies.contains(other) {
-            enemy_player_collision.send(EnemyPlayerCollision(other));
+            // enemy_player_collision.send(EnemyPlayerCollision(other));
+            commands.trigger_targets(EnemyPlayerCollision(other), player);
         }
     }
 }

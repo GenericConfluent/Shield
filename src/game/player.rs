@@ -26,36 +26,41 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     let mut sprite = Sprite::from_image(asset_server.load("player.png"));
     sprite.custom_size = Some(Vec2::new(20.0, 20.0));
 
-    commands.spawn((
-        EntityBundle {
-            sprite,
-            rigid_body: RigidBody::Kinematic,
-            transform: Transform::from_xyz(0., 0., 1.),
-            collider: Collider::circle(20.),
-        },
-        CollisionLayers::new(GameLayer::Default, CollisionLayers::ALL_FILTERS.filters),
-        Mass(2.0),
-        LinearVelocity(Vec2::ZERO),
-        MaxLinearSpeed(800.0),
-        AngularVelocity(0.0),
-        MaxAngularSpeed(200.0),
-        TransformInterpolation,
-        SleepingDisabled,
-        Sensor,
-        Player,
-        StateScoped(GameState::Game),
-    ));
+    commands
+        .spawn((
+            EntityBundle {
+                sprite,
+                rigid_body: RigidBody::Kinematic,
+                transform: Transform::from_xyz(0., 0., 1.),
+                collider: Collider::circle(20.),
+            },
+            CollisionLayers::new(GameLayer::Default, CollisionLayers::ALL_FILTERS.filters),
+            Mass(30.0),
+            LinearVelocity(Vec2::ZERO),
+            MaxLinearSpeed(800.0),
+            AngularVelocity(0.0),
+            MaxAngularSpeed(200.0),
+            TransformInterpolation,
+            SleepingDisabled,
+            Sensor,
+            Player,
+            StateScoped(GameState::Game),
+        ))
+        .observe(player_death);
 }
 
 // NOTE: This is supposed to be an observer.
 pub fn player_death(
-    _: Trigger<EnemyPlayerCollision>,
+    trigger: Trigger<EnemyPlayerCollision>,
     mut commands: Commands,
     data: Res<ExplosionTextureAtlas>,
     enemies: Query<(Entity, &Transform), With<Enemy>>,
     mut play_state: ResMut<PlayState>,
 ) {
     if *play_state == PlayState::Playing {
+        // Remove the player
+        commands.entity(trigger.entity()).despawn_recursive();
+        // Remove enemies
         for (entity, transform) in enemies.iter() {
             spawn_explosion(&mut commands, &data, transform.translation);
             commands.entity(entity).despawn_recursive();

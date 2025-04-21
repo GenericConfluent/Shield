@@ -78,7 +78,7 @@ struct ExplosionEvent(Vec<Entity>);
 struct EnemyPlayerCollision(Entity);
 
 #[derive(Resource, PartialEq)]
-enum PlayState {
+pub enum PlayState {
     Playing,
     Died,
     ReadyForMenu,
@@ -147,8 +147,7 @@ impl Plugin for GamePlugin {
                 .run_if(in_state(GameState::Game)),
         )
         // .add_systems(Last, check_end.run_if(in_state(GameState::Game)))
-        .add_systems(OnExit(GameState::Game), game_cleanup)
-        .add_observer(player_death);
+        .add_systems(OnExit(GameState::Game), game_cleanup);
     }
 }
 
@@ -164,6 +163,7 @@ fn game_setup(mut commands: Commands, asset_server: Res<AssetServer>, time: Res<
 
     commands.insert_resource(RoundStarted(time.elapsed_secs()));
     commands.insert_resource(PlayState::Playing);
+    commands.init_resource::<ExplosionTextureAtlas>();
 
     commands.spawn((
         Sprite::from_image(asset_server.load("gameback.png")),
@@ -276,8 +276,11 @@ fn display_time(
     mut display: Query<&mut Text, With<TimeDisplay>>,
     started: Res<RoundStarted>,
     time: Res<Time>,
+    play_state: Res<PlayState>,
 ) {
-    display.single_mut().0 = format!("{:.2}", time.elapsed_secs() - started.0);
+    if *play_state == PlayState::Playing {
+        display.single_mut().0 = format!("{:.2}", time.elapsed_secs() - started.0);
+    }
 }
 
 fn perform_explosion(
@@ -287,7 +290,6 @@ fn perform_explosion(
         With<Explosion>,
     >,
     time: Res<Time>,
-    // mut game_state: ResMut<NextState<GameState>>,
 ) {
     for (entity, indices, mut sprite, mut timer) in active_explosions.iter_mut() {
         timer.tick(time.delta());
@@ -295,6 +297,8 @@ fn perform_explosion(
             if let Some(atlas) = &mut sprite.texture_atlas {
                 if atlas.index == indices.last {
                     commands.entity(entity).despawn_recursive();
+                } else {
+                    atlas.index += 1;
                 }
             }
         }

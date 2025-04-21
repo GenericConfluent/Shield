@@ -9,7 +9,7 @@ default-features = false
 features = [
     "dynamic_linking", 
     "bevy_asset", 
-    "bevy_audio", 
+    # "bevy_audio", 
     "bevy_color", 
     "bevy_core_pipeline",
     "bevy_gizmos",
@@ -19,13 +19,11 @@ features = [
     "bevy_state",
     "bevy_text",
     "bevy_ui",
-    "bevy_ui_picking_backend",
+    # "bevy_ui_picking_backend",
     "bevy_window",
     "bevy_winit",
-    "custom_cursor",
     "wayland",
     "png",
-    "jpeg",
     "webgpu",
 ]
 
@@ -38,7 +36,6 @@ features = [
     "debug-plugin",
     "default-collider",
     "parry-f32",
-    "simd"
 ]
 
 [dependencies]
@@ -62,6 +59,7 @@ codegen-units = 1
 # Do a second optimization pass over the entire program, including dependencies.
 # Slows compile times, marginal improvements.
 lto = "thin"
+panic = "abort"
 
 # Optimize for size in the wasm-release profile to reduce load times and bandwidth usage on web.
 [profile.wasm-release]
@@ -72,3 +70,4 @@ inherits = "release"
 opt-level = "s"
 # Strip all debugging information from the binary to slightly reduce file size.
 strip = "debuginfo"
+

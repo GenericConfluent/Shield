@@ -1,3 +1,5 @@
+use std::f32;
+
 use super::*;
 use bevy::prelude::*;
 
@@ -18,9 +20,34 @@ pub fn spawn_enemy(
         if spawn_timer.0.tick(time.delta()).finished() {
             let area = camera.single().area;
 
+            let margin = 50.0;
+
             let mut rng = rand::thread_rng();
-            let x: f32 = rng.gen_range(area.min.x..area.max.x);
-            let y: f32 = rng.gen_range(area.min.y..area.max.y);
+
+            let edge = rng.gen_range(0..4);
+
+            let (x, y) = match edge {
+                0 => {
+                    // Top edge
+                    let x = rng.gen_range(area.min.x..area.max.x);
+                    (x, area.max.y + margin)
+                }
+                1 => {
+                    // Right edge
+                    let y = rng.gen_range(area.min.y..area.max.y);
+                    (area.max.x + margin, y)
+                }
+                2 => {
+                    // Bottom edge
+                    let x = rng.gen_range(area.min.x..area.max.x);
+                    (x, area.min.y - margin)
+                }
+                _ => {
+                    // Left edge
+                    let y = rng.gen_range(area.min.y..area.max.y);
+                    (area.min.x - margin, y)
+                }
+            };
 
             let player_pos = player.translation;
             let velocity =
@@ -29,11 +56,16 @@ pub fn spawn_enemy(
             let mut sprite = Sprite::from_image(asset_server.load("enemy.png"));
             sprite.custom_size = Some(Vec2 { x: 20., y: 20. });
 
+            // Figure out where to aim
+            let mut enemy_transform = Transform::from_xyz(x, y, 1.);
+            let angle = (enemy_transform.translation.xy() - player_pos.xy()).to_angle();
+            enemy_transform.rotate_z(angle + f32::consts::PI);
+
             commands.spawn((
                 EntityBundle {
                     sprite,
                     rigid_body: RigidBody::Kinematic,
-                    transform: Transform::from_xyz(x, y, 1.),
+                    transform: enemy_transform,
                     collider: Collider::circle(20.),
                 },
                 CollisionLayers::new(GameLayer::Enemy, GameLayer::Default),
@@ -69,4 +101,3 @@ pub fn despawn_enemy(
         }
     }
 }
-
