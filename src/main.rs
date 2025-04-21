@@ -1,5 +1,4 @@
 #![allow(clippy::complexity)]
-use bevy::math::Vec3Swizzles;
 use bevy::prelude::*;
 use rand::Rng;
 
@@ -8,7 +7,14 @@ mod menu;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                canvas: Some("#render-target".into()),
+                fit_canvas_to_parent: true,
+                ..default()
+            }),
+            ..default()
+        }))
         .init_state::<GameState>()
         .enable_state_scoped_entities::<GameState>()
         .add_plugins(game::GamePlugin)

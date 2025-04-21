@@ -49,7 +49,7 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
         .observe(player_death);
 }
 
-// NOTE: This is supposed to be an observer.
+// NOTE: This is supposed to be an observer on the player entity.
 pub fn player_death(
     trigger: Trigger<EnemyPlayerCollision>,
     mut commands: Commands,
@@ -58,9 +58,9 @@ pub fn player_death(
     mut play_state: ResMut<PlayState>,
 ) {
     if *play_state == PlayState::Playing {
-        // Remove the player
+        // Remove Player
         commands.entity(trigger.entity()).despawn_recursive();
-        // Remove enemies
+        // Remove Enemies
         for (entity, transform) in enemies.iter() {
             spawn_explosion(&mut commands, &data, transform.translation);
             commands.entity(entity).despawn_recursive();
@@ -94,7 +94,7 @@ pub fn player_control(
 
         if keyboard_input.pressed(KeyCode::KeyW) {
             let direction = player_transform.rotation.mul_vec3(Vec3::X).xy();
-            linear_velocity.0 = direction * 200.0; // Adjust speed as needed
+            linear_velocity.0 = direction * 200.0;
         }
 
         let Ok(projection) = camera.get_single() else {

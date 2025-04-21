@@ -1,3 +1,7 @@
+#!/usr/bin/env nu
+
+# TODO: Minify HTML/JS if applicable with bun
+
 const game_name = "shield"
 
 const itch_username = "genericconfluent"
@@ -15,9 +19,10 @@ def has_dependency [dep: string, required: bool = true]: nothing -> bool {
         } else {
             print $"WARN: missing ($dep)"
         }
+        false
+    } else {
         true
     }
-    false
 }
 
 has_dependency "cargo"
@@ -31,11 +36,20 @@ cargo build --release --target wasm32-unknown-unknown
 
 # Assemble Web Directory
 # NOTE: We are in nushell, parents are automatically created, -p is incompatible
-mkdir web_dir
+mkdir $web_dir
 
-wasm-bindgen --out-dir $web_dir --target web --no-typescript $"target/wasm32-unknown-unknown/release/($game_name).wasm"
+wasm-bindgen --out-dir $web_dir --out-name $game_name --target web --no-typescript $"target/wasm32-unknown-unknown/release/($game_name).wasm"
+
+# wasm-bindgen produces ($game_name)_bg.wasm
+
 if $extra_opt {
-    wasm-opt -O3 -o output.wasm input.wasm
+    print "INFO: Optimizing WASM"
+    let wasm_path = $"($web_dir)/($game_name)_bg.wasm"
+    mv $wasm_path $"($wasm_path).bak"
+    wasm-opt -O3 -o $wasm_path $"($wasm_path).bak"
+    rm $"($wasm_path).bak"
+} else {
+    print "INFO: Skipping WASM Opt"
 }
 
 if ($assets_dir | path exists) {
@@ -45,7 +59,7 @@ if ($assets_dir | path exists) {
 }
 
 if ($template_file | path exists) {
-    let content = (open $template_file | str replace "{{GAME_NAME}}" $game_name)
+    let content = (open $template_file | str replace --all "{{GAME_NAME}}" $game_name)
     $content | save -f $"($web_dir)/index.html"
 } else {
     # May work without assets, but will definetly need an index file
@@ -57,9 +71,11 @@ if ($template_file | path exists) {
 if not $can_zip {
     print "INFO: Skipping zip"
     exit 0
+} else {
+    print "INFO: Now zipping"
 }
 
-let timestamp = (date now | format date "%Y%m%d_%H%M%S")
+let timestamp = (date now | format date "%Y.%m.%d.%H.%M.%S")
 let archive_file = $"target/($game_name)-web-($timestamp).zip"
 
 let project_root = (pwd)
@@ -72,4 +88,4 @@ if not $can_upload {
     exit 0
 }
 
-butler push $archive_file $"$(itch_username)/$(itch_game_url):web" --userversion $timestamp
+# butler push $archive_file $"($itch_username)/($itch_game_url):web" --userversion $timestamp

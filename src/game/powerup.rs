@@ -26,10 +26,10 @@ pub fn handle_slowmotion(
 
     if *is_active && effect_time.finished() {
         *is_active = false;
-        info!("Slowmotion Removed");
+        // Remove
     } else if !*is_active && apply_effect {
         *is_active = true;
-        info!("Slowmotion Applied");
+        // Apply
     }
 }
 
@@ -58,9 +58,9 @@ pub fn handle_speedboost(
 
     if *is_active && effect_time.finished() {
         *is_active = false;
-        info!("SpeedBoost Removed");
+        // Remove
     } else if !*is_active && apply_effect {
         *is_active = true;
-        info!("SpeedBoost Applied");
+        // Apply
     }
 }
