@@ -36,6 +36,10 @@ cargo build --release --target wasm32-unknown-unknown
 
 # Assemble Web Directory
 # NOTE: We are in nushell, parents are automatically created, -p is incompatible
+if ($web_dir | path exists) {
+    rm -r $web_dir
+}
+
 mkdir $web_dir
 
 wasm-bindgen --out-dir $web_dir --out-name $game_name --target web --no-typescript $"target/wasm32-unknown-unknown/release/($game_name).wasm"

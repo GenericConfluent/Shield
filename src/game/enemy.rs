@@ -54,7 +54,7 @@ pub fn spawn_enemy(
                 Vec2::from_array([player_pos.x - x, player_pos.y - y]).normalize_or_zero() * 80.;
 
             let mut sprite = Sprite::from_image(asset_server.load("enemy.png"));
-            sprite.custom_size = Some(Vec2 { x: 20., y: 20. });
+            sprite.custom_size = Some(Vec2 { x: 32., y: 32. });
 
             // Figure out where to aim
             let mut enemy_transform = Transform::from_xyz(x, y, 1.);
@@ -66,7 +66,7 @@ pub fn spawn_enemy(
                     sprite,
                     rigid_body: RigidBody::Kinematic,
                     transform: enemy_transform,
-                    collider: Collider::circle(20.),
+                    collider: ship_collider(),
                 },
                 CollisionLayers::new(GameLayer::Enemy, GameLayer::Default),
                 LinearVelocity(velocity),

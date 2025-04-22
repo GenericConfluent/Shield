@@ -24,7 +24,7 @@ features = [
     "bevy_winit",
     "wayland",
     "png",
-    "webgpu",
+    "webgl2",
 ]
 
 [dependencies.avian2d]

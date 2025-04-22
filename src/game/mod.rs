@@ -4,10 +4,10 @@ mod player;
 mod powerup;
 
 use super::*;
-use avian2d::prelude::*;
+use avian2d::{math::Vector, prelude::*};
 use collision::{enemy_player_collision, item_player_collision};
 use enemy::{despawn_enemy, spawn_enemy};
-use player::{player_death, Player};
+use player::{player_control, player_death, Player};
 use powerup::{handle_slowmotion, handle_speedboost};
 use std::time::Duration;
 
@@ -110,6 +110,14 @@ enum GameLayer {
     Enemy,
 }
 
+pub fn ship_collider() -> Collider {
+    Collider::triangle(
+        Vec2::new(-16.0, 16.0),
+        Vec2::new(-16.0, -16.0),
+        Vec2::new(16.0, 0.0),
+    )
+}
+
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(
@@ -117,6 +125,7 @@ impl Plugin for GamePlugin {
                 .with_length_unit(100.0)
                 .set(PhysicsInterpolationPlugin::interpolate_all()),
         )
+        .add_plugins(PhysicsDebugPlugin::default())
         .insert_resource(Gravity(Vec2::ZERO))
         .insert_resource(PlayState::Playing)
         .add_event::<ExplosionEvent>()
@@ -139,13 +148,14 @@ impl Plugin for GamePlugin {
                 handle_speedboost,
                 perform_explosion,
                 // Player
-                player::player_control,
+                // player::player_control,
                 // UI
                 display_time,
                 exit_game_state,
             )
                 .run_if(in_state(GameState::Game)),
         )
+        .add_systems(FixedUpdate, player_control)
         // .add_systems(Last, check_end.run_if(in_state(GameState::Game)))
         .add_systems(OnExit(GameState::Game), game_cleanup);
     }
@@ -165,10 +175,10 @@ fn game_setup(mut commands: Commands, asset_server: Res<AssetServer>, time: Res<
     commands.insert_resource(PlayState::Playing);
     commands.init_resource::<ExplosionTextureAtlas>();
 
-    commands.spawn((
-        Sprite::from_image(asset_server.load("gameback.png")),
-        Background,
-    ));
+    // commands.spawn((
+    //     Sprite::from_image(asset_server.load("gameback.png")),
+    //     Background,
+    // ));
 
     commands
         .spawn((
@@ -248,13 +258,13 @@ fn spawn_items(
             acc += prob;
             if choice < acc {
                 let mut sprite = Sprite::from_image(textures[i].clone());
-                sprite.custom_size = Some(Vec2::new(24., 24.));
+                sprite.custom_size = Some(Vec2::new(32., 32.));
 
                 let mut ent_commands = commands.spawn((
                     CollectibleBundle {
                         sprite,
                         transform: Transform::from_xyz(x, y, 1.),
-                        collider: Collider::circle(12.),
+                        collider: Collider::circle(16.),
                         ..default()
                     },
                     CollisionLayers::new(GameLayer::Collectible, GameLayer::Default),

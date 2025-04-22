@@ -1,4 +1,5 @@
 use super::enemy::Enemy;
+use super::ship_collider;
 use super::spawn_explosion;
 use super::EnemyPlayerCollision;
 use super::EntityBundle;
@@ -24,7 +25,7 @@ pub struct Player;
 
 pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     let mut sprite = Sprite::from_image(asset_server.load("player.png"));
-    sprite.custom_size = Some(Vec2::new(20.0, 20.0));
+    sprite.custom_size = Some(Vec2::new(32.0, 32.0));
 
     commands
         .spawn((
@@ -32,7 +33,7 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
                 sprite,
                 rigid_body: RigidBody::Kinematic,
                 transform: Transform::from_xyz(0., 0., 1.),
-                collider: Collider::circle(20.),
+                collider: ship_collider(),
             },
             CollisionLayers::new(GameLayer::Default, CollisionLayers::ALL_FILTERS.filters),
             Mass(30.0),
@@ -40,7 +41,7 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
             MaxLinearSpeed(800.0),
             AngularVelocity(0.0),
             MaxAngularSpeed(200.0),
-            TransformInterpolation,
+            // TransformInterpolation,
             SleepingDisabled,
             Sensor,
             Player,
@@ -81,8 +82,8 @@ pub fn player_control(
         player_query.get_single_mut()
     {
         // I may want to dampen
-        // linear_velocity.0 = Vec2::ZERO;
-        // angular_velocity.0 = 0.0;
+        linear_velocity.0 *= 0.999;
+        angular_velocity.0 *= 0.99;
 
         let rotation_speed = 3.0;
         if keyboard_input.pressed(KeyCode::KeyA) {
@@ -94,7 +95,7 @@ pub fn player_control(
 
         if keyboard_input.pressed(KeyCode::KeyW) {
             let direction = player_transform.rotation.mul_vec3(Vec3::X).xy();
-            linear_velocity.0 = direction * 200.0;
+            linear_velocity.0 = direction * 300.0;
         }
 
         let Ok(projection) = camera.get_single() else {
