@@ -1,9 +1,15 @@
-use super::*;
+use super::{
+    enemy::{Enemy, EnemyAttributes},
+    player::PlayerAttributes,
+    *,
+};
 use bevy::prelude::*;
 
 pub fn handle_slowmotion(
     mut commands: Commands,
     mut collect_events: EventReader<CollectItemEvent>,
+    enemy_attrs: Res<EnemyAttributes>,
+    mut enemy_speeds: Query<&mut LinearVelocity, With<Enemy>>,
     time: Res<Time>,
     mut effect_time: Local<Timer>,
     mut is_active: Local<bool>,
@@ -26,16 +32,21 @@ pub fn handle_slowmotion(
 
     if *is_active && effect_time.finished() {
         *is_active = false;
-        // Remove
+        for mut velocity in enemy_speeds.iter_mut() {
+            velocity.0 = velocity.normalize_or_zero() * enemy_attrs.speed;
+        }
     } else if !*is_active && apply_effect {
         *is_active = true;
-        // Apply
+        for mut velocity in enemy_speeds.iter_mut() {
+            velocity.0 *= 0.5;
+        }
     }
 }
 
 pub fn handle_speedboost(
     mut commands: Commands,
     mut collect_events: EventReader<CollectItemEvent>,
+    mut player_attrs: ResMut<PlayerAttributes>,
     time: Res<Time>,
     mut effect_time: Local<Timer>,
     mut is_active: Local<bool>,
@@ -58,9 +69,9 @@ pub fn handle_speedboost(
 
     if *is_active && effect_time.finished() {
         *is_active = false;
-        // Remove
+        player_attrs.speed = PlayerAttributes::default().speed;
     } else if !*is_active && apply_effect {
         *is_active = true;
-        // Apply
+        player_attrs.speed *= 1.5;
     }
 }

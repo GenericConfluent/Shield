@@ -23,6 +23,17 @@ impl AxisInput for ButtonInput<KeyCode> {
 #[derive(Component)]
 pub struct Player;
 
+#[derive(Resource)]
+pub struct PlayerAttributes {
+    pub speed: f32,
+}
+
+impl Default for PlayerAttributes {
+    fn default() -> Self {
+        PlayerAttributes { speed: 245.0 }
+    }
+}
+
 pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     let mut sprite = Sprite::from_image(asset_server.load("player.png"));
     sprite.custom_size = Some(Vec2::new(32.0, 32.0));
@@ -75,6 +86,7 @@ pub fn player_control(
         (&mut LinearVelocity, &mut AngularVelocity, &mut Transform),
         With<Player>,
     >,
+    player_attrs: Res<PlayerAttributes>,
     camera: Query<&OrthographicProjection, With<Camera>>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
 ) {
@@ -95,7 +107,7 @@ pub fn player_control(
 
         if keyboard_input.pressed(KeyCode::KeyW) {
             let direction = player_transform.rotation.mul_vec3(Vec3::X).xy();
-            linear_velocity.0 = direction * 300.0;
+            linear_velocity.0 = direction * player_attrs.speed;
         }
 
         let Ok(projection) = camera.get_single() else {

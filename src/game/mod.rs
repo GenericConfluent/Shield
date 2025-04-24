@@ -6,8 +6,8 @@ mod powerup;
 use super::*;
 use avian2d::{math::Vector, prelude::*};
 use collision::{enemy_player_collision, item_player_collision};
-use enemy::{despawn_enemy, spawn_enemy};
-use player::{player_control, player_death, Player};
+use enemy::{despawn_enemy, spawn_enemy, EnemyAttributes};
+use player::{player_control, player_death, Player, PlayerAttributes};
 use powerup::{handle_slowmotion, handle_speedboost};
 use std::time::Duration;
 
@@ -94,6 +94,9 @@ enum PowerUp {
 #[derive(Component)]
 struct Bomb;
 
+#[derive(Resource, Default, Deref, DerefMut)]
+pub struct CurrentScore(f32);
+
 #[derive(Bundle, Default)]
 struct CollectibleBundle {
     sprite: Sprite,
@@ -128,6 +131,9 @@ impl Plugin for GamePlugin {
         .add_plugins(PhysicsDebugPlugin::default())
         .insert_resource(Gravity(Vec2::ZERO))
         .insert_resource(PlayState::Playing)
+        .init_resource::<PlayerAttributes>()
+        .init_resource::<EnemyAttributes>()
+        .init_resource::<CurrentScore>()
         .add_event::<ExplosionEvent>()
         .add_event::<EnemyPlayerCollision>()
         .add_event::<CollectItemEvent>()

@@ -8,6 +8,17 @@ pub struct Enemy {
     has_appeared: bool,
 }
 
+#[derive(Resource)]
+pub struct EnemyAttributes {
+    pub speed: f32,
+}
+
+impl Default for EnemyAttributes {
+    fn default() -> Self {
+        Self { speed: 80.0 }
+    }
+}
+
 pub fn spawn_enemy(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
